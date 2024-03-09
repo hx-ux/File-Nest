@@ -54,7 +54,10 @@ dependencies:
   file_picker: ^5.3.1
   shared_preferences: ^2.2.2
   
-  fk_toggle: ^0.1.4
+  # fk_toggle: ^0.1.4
+  # animated_toggle_switch: ^0.8.2
+
+  flutter_toggle_tab: ^1.4.1
 
 dev_dependencies:
   flutter_test:

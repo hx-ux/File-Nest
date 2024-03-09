@@ -1,3 +1,4 @@
+import 'package:file_nest/config.dart';
 import 'package:flutter/material.dart';
 
 Future<dynamic> showAboutPage(BuildContext context) async {
@@ -12,7 +13,9 @@ Future<dynamic> showAboutPage(BuildContext context) async {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(""),
+            const Text(AppSettings.appName),
+            const Text(AppSettings.appVersion),
+            const Text(AppSettings.isStable ? "Stable" : "Unstable"),
            
             TextButton(
               onPressed: () {

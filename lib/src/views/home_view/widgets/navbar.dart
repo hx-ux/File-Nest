@@ -1,8 +1,8 @@
 import 'package:file_nest/src/core/theme/colors.style.dart';
 import 'package:file_nest/src/views/controllers/HOME_Controller.dart';
+import 'package:file_nest/src/views/home_view/widgets/ToggleButton.dart';
 import 'package:file_nest/src/views/logs_view/logs_view.dart';
-import 'package:file_nest/src/views/settings_view/settings_page.dart';
-import 'package:fk_toggle/fk_toggle.dart';
+import 'package:file_nest/src/views/settings_view/settings_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -32,7 +32,7 @@ class Navbar extends GetView<HOME_Controller> {
           if (!subpage)
             ElevatedButton(
               onPressed: () {
-                Get.to(Logs_view());
+                Get.to(Logs_Page());
               },
               child: const Column(
                 children: [
@@ -44,7 +44,7 @@ class Navbar extends GetView<HOME_Controller> {
           if (!subpage)
             ElevatedButton(
               onPressed: () {
-                Get.to(const SettingsPage());
+                Get.to( SettingsPage());
               },
               child: const Column(
                 children: [
@@ -54,18 +54,22 @@ class Navbar extends GetView<HOME_Controller> {
               ),
             ),
           if (!subpage)
-            FkToggle(
-              width: 50,
-              height: 50,
-              labels: const ['copy', 'move'],
-              backgroundColor: IColors.background,
-              selectedColor: IColors.attentionColor,
-              enabledElementColor: Colors.white,
-              disabledElementColor: Colors.white,
-              onSelected: (idx, instance) {
-                controller.changeMode(idx);
-              },
-            ),
+          // controller.changeMode(idx);
+          
+           ToggleBtn(controller: controller)
+               
+            // FkToggle(
+            //   width: 50,
+            //   height: 50,
+            //   labels: const ['copy', 'move'],
+            //   backgroundColor: IColors.background,
+            //   selectedColor: IColors.attentionColor,
+            //   enabledElementColor: Colors.white,
+            //   disabledElementColor: Colors.white,
+            //   onSelected: (idx, instance) {
+            //     controller.changeMode(idx);
+            //   },
+            // ),
         ],
       ),
     );

@@ -3,11 +3,11 @@ import 'package:file_nest/src/views/home_view/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class Logs_view extends GetView<LOG_Controller> {
+class Logs_Page extends GetView<LOG_Controller> {
+  Logs_Page({super.key});
   @override
   final controller = Get.put(LOG_Controller());
 
-  Logs_view({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

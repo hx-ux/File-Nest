@@ -1,3 +1,4 @@
+import 'package:file_nest/config.dart';
 import 'package:file_nest/src/model/db.dart';
 import 'package:file_nest/src/routes/app_pages.dart';
 import 'package:file_nest/src/views/bindings/binding.dart';
@@ -21,7 +22,7 @@ Future<void> main() async {
     skipTaskbar: false,
     titleBarStyle: TitleBarStyle.normal,
     windowButtonVisibility: true,
-    title: "File nest",
+    title: AppSettings.appName,
   );
 
   windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -47,9 +48,9 @@ Future<void> main() async {
               ),
             );
           },
-          initialRoute: Routes.SETTINGS,
+          initialRoute: Routes.HOME,
           getPages: AppPages.pages,
-          home: Controll(), // app screens
+          home: Home_Page(), // app screens
         );
       },
     ),
