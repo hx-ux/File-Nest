@@ -11,8 +11,6 @@ class shared_p {
   }
 
 
-
-
   static Future<bool?> getDarkMode() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(KEY_DarkMode);

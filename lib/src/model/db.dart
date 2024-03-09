@@ -22,29 +22,20 @@ class DBApdater {
     return isar;
   }
 
-
-
   static Future<List<TargetArtefact>> getAllTargetArtefacts() async {
-    
     return isar.targetArtefacts.where().findAll();
   }
 
   static Future<void> addUser(TargetArtefact user) async {
-  //   final isar = await _db;
-      await isar.writeTxn(() => isar.targetArtefacts.put(user));
-    }
+    await isar.writeTxn(() => isar.targetArtefacts.put(user));
+  }
 
+  static Future<void> updateArtefact(TargetArtefact user) async {
+    await isar.writeTxn(() => isar.targetArtefacts.put(user));
+  }
 
+  static Future<void> deleteArteFact(int userId) async {
+    await isar.writeTxn(() => isar.targetArtefacts.delete(userId));
+  }
 
-   static Future<void> updateArtefact(TargetArtefact user) async {
-     await isar.writeTxn(() => isar.targetArtefacts.put(user));
-   }
-
-   static Future<void> deleteArteFact(int userId) async {
-     await isar.writeTxn(() => isar.targetArtefacts.delete(userId));
-   }
-
-  // Future<void> clearUser() async {
-  //   await isar.writeTxn(() => isar.users.clear());
-  // }
 }

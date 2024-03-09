@@ -6,6 +6,4 @@ abstract class Routes {
   static const HOME = '/home';
   static const SETTINGS = '/settings';
   static const LOG = '/log';
-
-
 }
