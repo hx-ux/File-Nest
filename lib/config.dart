@@ -7,5 +7,4 @@ class AppSettings {
   static const minSize=Size(400, 400);
   static const startSize =Size(400, 800);
   static const maxSize =Size(800, 800);
-
 }

@@ -27,12 +27,12 @@ class Home_Page extends GetView<HOME_Controller> {
             subpage: false,
           ),
         ),
-        controller.allArtefacts.isEmpty 
-            ? const Expanded(child:  Center(child: Text("add folders")))
+        controller.allArtefacts.isEmpty
+            ? const Expanded(child: Center(child: Text("add folders")))
             : Expanded(
                 child: ListView(
                   shrinkWrap: true, // use it
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   children: [
                     Obx(() => ListView.builder(
                           shrinkWrap: true,
@@ -117,24 +117,34 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
                 : Colors.white,
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start, // add space
             children: [
               IconButton(
-                  onPressed: () {
-                    controller.openFileExplorer((widget.artefact.url));
-                  },
-                  icon: const Icon(FluentIcons.document_folder_24_regular)),
+                onPressed: () {
+                  controller.openFileExplorer((widget.artefact.url));
+                },
+                icon: const Icon(
+                  FluentIcons.document_folder_24_regular,
+                  size: 24, // increase icon size
+                ),
+              ),
               IconButton(
-                  onPressed: () {
-                    controller.deleteArtefact(widget.artefact);
-                  },
-                  icon: const Icon(FluentIcons.bin_recycle_24_regular)),
+                onPressed: () {
+                  controller.deleteArtefact(widget.artefact);
+                },
+                icon: const Icon(
+                  FluentIcons.bin_recycle_24_regular,
+                  size: 24, // increase icon size
+                ),
+              ),
               Center(
                 child: Text(
                   widget.artefact.name.toString(),
                   style: const TextStyle(
-                      color: IColors.backgroundDark,
-                      fontFamily: IFont.primaryFontBold,
-                      fontSize: 15),
+                    color: IColors.backgroundDark,
+                    fontFamily: IFont.primaryFontBold,
+                    fontSize: 15, 
+                  ),
                 ),
               ),
             ],

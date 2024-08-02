@@ -8,7 +8,7 @@ enum SnackBarType {
   error,
 }
 
-SnackbarController showSnackbarInformations(String message,
+SnackbarController showSnackbarInformation(String message,
     {infoType = SnackBarType.success}) {
   return Get.snackbar(
     infoType == SnackBarType.success ? "success" : "Error",

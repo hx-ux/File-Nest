@@ -51,7 +51,6 @@ class _ToggleBtnState extends State<ToggleBtn> {
           icons: _icons,
           selectedIndex: selItem,
           selectedLabelIndex: (index) {
-            // controller.changeMode(index);
             selItem = index;
           },
         ));

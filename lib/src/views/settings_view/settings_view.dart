@@ -56,41 +56,21 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
             child: const Text("About"),
           ),
         ),
+      
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.1,
           width: MediaQuery.of(context).size.width * 0.6,
           child: Row(
             children: [
-              const Text(
-                'Always Move',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              Obx(() => Checkbox(
-                    value: controller.alwaysMove.value,
-                    onChanged: (bool? value) {
-                      controller.setDefaultCopyMove(value!);
-                    },
-                  ))
-            ],
+               ElevatedButton(
+            onPressed: () {
+              controller.isDarkMode.value =controller.isDarkMode.value?false:true;
+            },
+            child: const Text("Dark Mode"),
           ),
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.1,
-          width: MediaQuery.of(context).size.width * 0.6,
-          child: Row(
-            children: [
-              const Text(
-                'Dark Mode ',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
               Obx(() => Checkbox(
                     value: controller.isDarkMode.value,
                     onChanged: (bool? value) {
-                      controller.toggleColorMode(value!);
                     },
                   ))
             ],

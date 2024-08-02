@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CardExample extends StatelessWidget {
-  const CardExample({super.key, required this.message, required this.time, required this.icon, required this.color, required this.filena});
+  const CardExample.LogCard({super.key, required this.message, required this.time, required this.icon, required this.color, required this.filename});
 
 final String message;
-final String filena;
+final String filename;
 final String time;
 final IconData icon;
 final Color color;	
@@ -19,8 +19,8 @@ final Color color;
           children: <Widget>[
              ListTile(
               leading: Icon(icon),
-              title: Text(filena),
-              subtitle: Text(time + " "+  message) ,
+              title: Text(message),
+              subtitle: Text("$time: $filename") ,
             ),
           ],
         ),

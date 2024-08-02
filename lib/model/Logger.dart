@@ -52,7 +52,7 @@ class AppLogger {
       if(destination!="none") {
         msg	+= "$destination ";
       }
-      showSnackbarInformations(msg, infoType: logEnumToSnackBarenum(logLevel));
+      showSnackbarInformation(msg, infoType: logEnumToSnackBarenum(logLevel));
     }
   }
 

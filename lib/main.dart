@@ -5,7 +5,6 @@ import 'package:file_nest/src/core/theme/app_theme.dart';
 import 'package:file_nest/src/model/db.dart';
 import 'package:file_nest/src/routes/app_pages.dart';
 import 'package:file_nest/src/views/bindings/binding.dart';
-import 'package:file_nest/src/views/controllers/HOME_Controller.dart';
 import 'package:file_nest/src/views/home_view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

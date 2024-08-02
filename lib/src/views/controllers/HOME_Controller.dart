@@ -26,6 +26,7 @@ class HOME_Controller extends GetxController {
 
   final copyOrMove = CopyOrMove.Copy.obs;
   TargetArtefact? selectedNode = TargetArtefact("", "");
+  
   //gui stuff
   RxBool isOverNode = false.obs;
   RxInt dropTragetIdentifier = 0.obs;

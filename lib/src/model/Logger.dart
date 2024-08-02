@@ -23,65 +23,55 @@ class AppLogger {
   DateFormat DateTimeFormat() => DateFormat('dd/MM/yy HH:mm:ss');
   String GetTimeStamp() => DateTimeFormat().format(DateTime.now()).toString();
 
-  static Future<File> logFilePath() async {
+  static Future<File> get logFilePath async {
     final dir = await getApplicationDocumentsDirectory();
     return File(p.join(dir.path, "file_nest_log.txt"));
   }
 
   static void clearLogFile() async {
-    final file = await logFilePath();
-    final log = file.openWrite(mode: FileMode.write);
-    log.write("");
+    final file = await logFilePath;
+    file.openWrite(mode: FileMode.write).write("");
   }
 
-  AppLogger(
-      {this.logLevel = LogLevel.copy,
-      this.message = "",
-      this.fileName = "none",
-      this.destination ="none",
-      });
+  AppLogger({
+    this.logLevel = LogLevel.copy,
+    this.message = "",
+    this.fileName = "none",
+    this.destination = "none",
+  });
 
   void logToFile({showSnackbar = true}) {
-     _writeLog(logLevel, message, fileName,destination);
+    _writeLog(logLevel, message, fileName, destination);
 
     if (showSnackbar) {
-      String msg ="$message ";
-      if(fileName!="none") {
+      String msg = "$message ";
+
+      if (fileName != "none") {
         msg += "$fileName ";
       }
-      if(destination!="none") {
-        msg	+= "$destination ";
+      if (destination != "none") {
+        msg += "$destination ";
       }
-      showSnackbarInformations(msg, infoType: logEnumToSnackBarenum(logLevel));
+      showSnackbarInformation(msg, infoType: logEnumToSnackBarenum(logLevel));
     }
   }
 
-  void _writeLog(LogLevel logtype, String message, String filename ,String destination ) async {
-    final file = await logFilePath();
+  void _writeLog(LogLevel logtype, String message, String filename,
+      String destination) async {
+
+    final file = await logFilePath;
     if (!await file.exists()) await file.create();
-    String f = logtype.name;
     final log = file.openWrite(mode: FileMode.append);
-
-    String t = GetTimeStamp();
-
-    log.writeln('$f| $t | $message | $filename | $destination');
+    log.writeln('${logtype.name}| ${GetTimeStamp()} | $message | $filename | $destination');
     log.close();
   }
 
   Future<List<AppLogger>> readLog() async {
     List<AppLogger> logList = [];
-    final file = await logFilePath();
+    final file = await logFilePath;
+
     for (var element in file.readAsLinesSync()) {
       logList.add(_logToClass(element));
-    }
-    return logList;
-  }
-
-  Future<List<String>> readLogString() async {
-    List<String> logList = [];
-    File file = await logFilePath();
-    for (var element in file.readAsLinesSync()) {
-      logList.add(element);
     }
     return logList;
   }
