@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:file_copy/file_copy.dart';
 import 'package:file_nest/src/core/theme/app_theme.dart';
 import 'package:file_nest/src/core/utilities/Explorer.dart';
 import 'package:file_nest/src/model/Logger.dart';
@@ -26,7 +25,7 @@ class HOME_Controller extends GetxController {
 
   final copyOrMove = CopyOrMove.Copy.obs;
   TargetArtefact? selectedNode = TargetArtefact("", "");
-  
+
   //gui stuff
   RxBool isOverNode = false.obs;
   RxInt dropTragetIdentifier = 0.obs;
@@ -109,13 +108,6 @@ class HOME_Controller extends GetxController {
         showLoadingScreen();
 
         isTransferingFile = true.obs;
-        await FileCopy.copyFile(
-          originalFile,
-          destinationFile,
-          onChangeProgress: (progress) {
-            transferProgress.value = progress.progress;
-          },
-        );
 
         if (deleteAfterTransfer) {
           originalFile.delete();
@@ -123,7 +115,7 @@ class HOME_Controller extends GetxController {
 
         message = !deleteAfterTransfer ? 'copied file' : "moved file";
         Get.back(closeOverlays: true);
-       
+
         AppLogger(
                 logLevel: LogLevel.copy,
                 message: message,
