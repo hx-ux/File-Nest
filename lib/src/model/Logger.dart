@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_nest/src/model/DirectoryManager.dart';
 import 'package:file_nest/src/services/snackbar_information.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +23,6 @@ class AppLogger {
 
   DateFormat DateTimeFormat() => DateFormat('dd/MM/yy HH:mm:ss');
   String GetTimeStamp() => DateTimeFormat().format(DateTime.now()).toString();
-
-  static Future<File> get logFilePath async {
-    final dir = await getApplicationDocumentsDirectory();
-    return File(p.join(dir.path, "file_nest_log.txt"));
-  }
 
   static void clearLogFile() async {
     final file = await logFilePath;
@@ -58,11 +54,11 @@ class AppLogger {
 
   void _writeLog(LogLevel logtype, String message, String filename,
       String destination) async {
-
     final file = await logFilePath;
-    if (!await file.exists()) await file.create();
+
     final log = file.openWrite(mode: FileMode.append);
-    log.writeln('${logtype.name}| ${GetTimeStamp()} | $message | $filename | $destination');
+    log.writeln(
+        '${logtype.name}| ${GetTimeStamp()} | $message | $filename | $destination');
     log.close();
   }
 

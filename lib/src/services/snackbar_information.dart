@@ -23,6 +23,8 @@ SnackbarController showSnackbarInformation(String message,
     snackPosition: SnackPosition.BOTTOM,
     margin: const EdgeInsets.all(10),
     duration: const Duration(seconds: 3),
+    animationDuration: const Duration(milliseconds: 0),
     onTap: (snack) => Get.back(),
+
   );
 }

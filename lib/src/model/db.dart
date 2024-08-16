@@ -1,3 +1,4 @@
+import 'package:file_nest/src/model/DirectoryManager.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file_nest/src/model/TargetArtefact.dart';
@@ -12,12 +13,12 @@ class DBApdater {
   static late Isar isar;
 
   static Future<Isar> init() async {
-    final dir = await getApplicationDocumentsDirectory();
+    final dir = await fileNestBaseDir;
     isar = await Isar.open(
       [TargetArtefactSchema],
       inspector: true,
       directory: dir.path,
-      name: "file_nest",
+      name: "file_nest_db",
     );
 
     return isar;

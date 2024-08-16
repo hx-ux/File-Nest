@@ -138,8 +138,7 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
                   style: const TextStyle(
                     color: IColors.backgroundDark,
                     fontFamily: IFont.primaryFontBold,
-                    fontSize: 15,
-                  ),
+                    fontSize: 15,),
                 ),
               ),
             ],
