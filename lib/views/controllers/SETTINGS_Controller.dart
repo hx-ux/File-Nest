@@ -1,4 +1,3 @@
-
 import 'package:file_nest/model/Logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,27 +33,31 @@ class SETTINGS_Controller extends GetxController {
     ).logToFile();
   }
 
-  void toggleColorMode(bool selValue) {
-    isDarkMode.value =  selValue;
-    GlobalConfiguration().updateValue("darkTheme", selValue);
+  void toggleColorMode() {
+    var _temp = !isDarkMode.value;
+    isDarkMode.value = _temp;
+    GlobalConfiguration().updateValue("darkTheme", _temp);
+
     AppLogger(
       message: "set color Theme to  $isDarkMode",
       logLevel: LogLevel.info,
     ).logToFile(showSnackbar: false);
+
     update();
+    Navigator.of(Get.context!).pop();
   }
 
-  void setDefaultCopyMove(bool selValue) {
-    GlobalConfiguration().updateValue("alwaysMove", selValue);
-    alwaysMove.value = selValue;
+  void toggleCopyMove() {
+    var _temp = !alwaysMove.value;
+    GlobalConfiguration().updateValue("alwaysMove", _temp);
+    alwaysMove.value = _temp;
     AppLogger(
-      message: "changed default mode to $selValue",
+      message: "changed default mode to $_temp",
       logLevel: LogLevel.info,
     ).logToFile(showSnackbar: false);
     update();
+    Navigator.of(Get.context!).pop();
   }
 
-  void showAboutPage(BuildContext context) {
-    showAboutPage(context);
-  }
+  void showAboutPage(BuildContext context) => showAboutPage(context);
 }

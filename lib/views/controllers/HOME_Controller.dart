@@ -94,14 +94,13 @@ class HOME_Controller extends GetxController {
   Future<void> _copyMoveFile(File originalFile, File destinationFolder,
       String sourceFilePath, bool deleteAfterTransfer) async {
     String destinationFile = "${destinationFolder.path}\\$sourceFilePath";
-    String message = "file already exists";
 
     try {
       // check if file exits
       if (fileExists(destinationFile)) {
         AppLogger(
                 logLevel: LogLevel.error,
-                message: message,
+                message: "file already exists",
                 fileName: basename((File(destinationFile).path)))
             .logToFile();
       } else {
@@ -120,25 +119,23 @@ class HOME_Controller extends GetxController {
           originalFile.delete();
         }
 
-        message = !deleteAfterTransfer ? 'copied file' : "moved file";
         Get.back(closeOverlays: true);
-       
+
         AppLogger(
                 logLevel: LogLevel.copy,
-                message: message,
+                message: !deleteAfterTransfer ? 'copied file' : "moved file",
                 fileName: basename((File(destinationFile).path)))
             .logToFile();
       }
 
-      message =
-          !deleteAfterTransfer ? 'error copying file' : "error moving file";
+          
       // close the overlay
     } catch (e) {
       Get.back(closeOverlays: true);
 
       AppLogger(
         logLevel: LogLevel.error,
-        message: message,
+        message: !deleteAfterTransfer ? 'error copying file' : "error moving file",
         fileName: basename((File(destinationFile).path)),
       ).logToFile();
     }
@@ -167,7 +164,7 @@ class HOME_Controller extends GetxController {
     ));
   }
 
-  void openFileExplorer(String url) => FileExplorer.openFileExplorer(url);
+  void openFileExplorer(String url) => UrlLaunchOptions.openFileExplorer(url);
 
   void changeMode(int idx) =>
       copyOrMove.value = idx == 0 ? CopyOrMove.Copy : CopyOrMove.Move;

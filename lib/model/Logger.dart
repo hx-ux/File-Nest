@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:intl/date_symbol_data_local.dart';
 
 enum LogLevel { debug, info, warning, error, copy, move }
 
@@ -18,12 +19,13 @@ class AppLogger {
   String destination;
   String? timestamp;
   IconData? icon;
-  Color? col;
+  Color? color;
 
   // DateFormat DateTimeFormat() => DateFormat('dd/MM/yy HH:mm:ss');
   String GetTimeStampAsString() {
     var now = new DateTime.now();
-    var formatter = new DateFormat('EEEE, d. MMMM y', 'de_DE');
+    var formatter = DateFormat('dd.MM.yyyy', 'de_DE');
+
     return formatter.format(now);
   }
 
@@ -76,36 +78,31 @@ class AppLogger {
   Future<List<AppLogger>> readLog() async {
     List<AppLogger> logList = [];
     final file = await logFilePath();
+
     for (var element in file.readAsLinesSync()) {
       logList.add(_logToClass(element));
     }
     return logList;
   }
 
-  Future<List<String>> readLogString() async {
-    List<String> logList = [];
-    File file = await logFilePath();
-    for (var element in file.readAsLinesSync()) {
-      logList.add(element);
-    }
-    return logList;
-  }
 
-  static _logToClass(String message) {
+
+  AppLogger _logToClass(String message) {
     {
       var parts = message.split('|');
       AppLogger appLogger = AppLogger();
-      LogLevel logLevel = LogLevel.values.byName(parts[0]);
-      appLogger.logLevel = logLevel;
+
+      appLogger.logLevel = LogLevel.values.byName(parts[0]);
       appLogger.timestamp = parts[1];
       appLogger.message = parts[2];
       appLogger.fileName = parts[3];
       appLogger.destination = parts[4];
-      appLogger.icon = getIconForLogLevel(logLevel);
-      appLogger.col = getColorForLogLevel(logLevel);
+      appLogger.icon = getIconForLogLevel(LogLevel.values.byName(parts[0]));
+      appLogger.color = getColorForLogLevel(LogLevel.values.byName(parts[0]));
       return appLogger;
     }
   }
+
 
   static Color getColorForLogLevel(LogLevel level) {
     switch (level) {
@@ -146,6 +143,6 @@ class AppLogger {
         return FluentIcons.bug_24_regular;
     }
   }
-  
+
   void showSnackbarInformation(String msg, {required infoType}) {}
 }
