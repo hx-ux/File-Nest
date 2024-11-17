@@ -1,16 +1,20 @@
-# file_nest
+# 📁 File Nest 
 
-A new Flutter project.
+## About
 
-## Getting Started
+File Nest  is a lightweight and intuitive file copying application built with Flutter. Easily cleanup your desktop , by copying files to folders using a GUI.
 
-This project is a starting point for a Flutter application.
+#### Status
 
-A few resources to get you started if this is your first Flutter project:
+>  Still in Beta: Please keep in mind that File Nest is still in its beta phase. 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+#### Platform Support:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  >  Currently, File Nest has only been tested on Windows. <br> 
+  > Support for Linux is coming soon! 
+
+## Features
+
+* Simple and intuitive interface
+* Database included for saving favorites
+* Logging system
