@@ -15,22 +15,22 @@ dependencies:
   get: ^4.6.6
   url_launcher: ^6.1.14
   
-  window_manager: ^0.3.7
+  window_manager: ^0.4.3
   flutter_screenutil: ^5.9.0
   desktop_drop: ^0.4.4
   
   file_copy: ^1.0.7
   path: ^1.8.3
-  uuid: ^3.0.7
+  uuid: ^4.5.1
   path_provider: ^2.1.2
   
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
   filesystem_picker: ^4.1.0
-  file_picker: ^5.3.1
+  file_picker: ^8.0.7
   flutter_toggle_tab: ^1.4.1
   fluentui_system_icons: ^1.1.236
-  intl: ^0.19.0
+  intl: ^0.20.0
   global_configuration: ^2.0.0
   open_dir: ^0.0.1+6
 
@@ -41,7 +41,7 @@ dev_dependencies:
   isar_generator: ^3.1.0+1
   build_runner: ^2.4.9
  
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: false
