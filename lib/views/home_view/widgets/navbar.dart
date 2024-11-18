@@ -1,4 +1,3 @@
-
 import 'package:file_nest/core/theme/colors.style.dart';
 import 'package:file_nest/views/controllers/HOME_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/ToggleButton.dart';
@@ -7,7 +6,6 @@ import 'package:file_nest/views/settings_view/settings_view.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 
 class Navbar extends GetView<HOME_Controller> {
   final subpage;
@@ -26,7 +24,8 @@ class Navbar extends GetView<HOME_Controller> {
               },
               child: const Column(
                 children: [
-                  Icon(FluentIcons.backspace_24_regular),
+                  Icon(FluentIcons.backspace_24_regular,
+                      color: IColors.navbarTextColor),
                   Text('Back'),
                 ],
               ),
@@ -38,7 +37,8 @@ class Navbar extends GetView<HOME_Controller> {
               },
               child: const Column(
                 children: [
-                  Icon(FluentIcons.history_24_regular),
+                  Icon(FluentIcons.history_24_regular,
+                      color: IColors.navbarTextColor),
                   Text('History'),
                 ],
               ),
@@ -46,17 +46,17 @@ class Navbar extends GetView<HOME_Controller> {
           if (!subpage)
             ElevatedButton(
               onPressed: () {
-                Get.to( SettingsPage());
+                Get.to(SettingsPage());
               },
               child: const Column(
                 children: [
-                  Icon(FluentIcons.settings_24_regular),
+                  Icon(FluentIcons.settings_24_regular,
+                      color: IColors.navbarTextColor),
                   Text('Config'),
                 ],
               ),
             ),
-          if (!subpage)
-           ToggleBtn(controller: controller)
+          if (!subpage) ToggleBtn(controller: controller)
         ],
       ),
     );

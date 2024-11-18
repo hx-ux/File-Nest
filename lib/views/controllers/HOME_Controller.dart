@@ -65,7 +65,7 @@ class HOME_Controller extends GetxController {
     } catch (e) {
       AppLogger(
         logLevel: LogLevel.error,
-        message: "cannot add folder $e",
+        message: "error creating folder",
         fileName: "$e",
       ).logToFile();
     }
@@ -90,6 +90,35 @@ class HOME_Controller extends GetxController {
     await _copyMoveFile(originalFile, File(targetPath), sourceFilePath,
         deleteFileAfterTransfer);
   }
+
+void copyFile(File originalFile, String destinationPath) async {
+  try {
+    // Check if file exists in the destination path
+    final File newFile = File(destinationPath);
+
+    if (await newFile.exists()) {
+      print("File already exists");
+      return;
+    }
+
+    // Display loading indicator
+
+    await originalFile.copy(destinationPath);
+    print('File copied to $destinationPath');
+
+
+  } catch(e) {
+      AppLogger(
+                logLevel: LogLevel.error,
+                message: 'copied file',
+                fileName: basename((originalFile.path)))
+            .logToFile();
+  }
+}
+
+
+
+
 
   Future<void> _copyMoveFile(File originalFile, File destinationFolder,
       String sourceFilePath, bool deleteAfterTransfer) async {
@@ -164,7 +193,9 @@ class HOME_Controller extends GetxController {
     ));
   }
 
-  void openFileExplorer(String url) => UrlLaunchOptions.openFileExplorer(url);
+  Future<void> openFileExplorer(String url) async {
+    UrlLaunchOptions.openFileExplorer(url);
+  }
 
   void changeMode(int idx) =>
       copyOrMove.value = idx == 0 ? CopyOrMove.Copy : CopyOrMove.Move;
