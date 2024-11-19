@@ -32,7 +32,7 @@ dependencies:
   intl: ^0.20.0
   global_configuration: ^2.0.0
   open_dir: ^0.0.1+6
-  url_launcher: ^6.3.1
+  material_dialogs: ^1.1.5
 
 
 dev_dependencies:

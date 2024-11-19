@@ -2,16 +2,19 @@ import 'dart:io';
 
 import 'package:file_copy/file_copy.dart';
 import 'package:file_nest/core/theme/app_theme.dart';
-import 'package:file_nest/core/utilities/Explorer.dart';
+import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/model/Logger.dart';
 import 'package:file_nest/model/TargetArtefact.dart';
 import 'package:file_nest/model/db.dart';
+import 'package:file_nest/services/Dialogs.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:material_dialogs/dialogs.dart';
+import 'package:material_dialogs/shared/types.dart';
+import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:path/path.dart' as p;
-import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 
 enum CopyOrMove {
@@ -29,8 +32,8 @@ class HOME_Controller extends GetxController {
   //gui stuff
   RxBool isOverNode = false.obs;
   RxInt dropTragetIdentifier = 0.obs;
+
   RxBool isTransferingFile = false.obs;
-  var showTransferProgress = false.obs;
   RxDouble transferProgress = 0.0.obs;
   //
 
@@ -82,121 +85,87 @@ class HOME_Controller extends GetxController {
     ).logToFile();
   }
 
-  void moveOrCopyFile(File originalFile, String targetPath) async {
-    // display the loading overlay
-    String sourceFilePath = p.basename(originalFile.path);
-    bool deleteFileAfterTransfer = copyOrMove.value == CopyOrMove.Move;
-
-    await _copyMoveFile(originalFile, File(targetPath), sourceFilePath,
-        deleteFileAfterTransfer);
-  }
-
-void copyFile(File originalFile, String destinationPath) async {
-  try {
-    // Check if file exists in the destination path
-    final File newFile = File(destinationPath);
-
-    if (await newFile.exists()) {
-      print("File already exists");
-      return;
-    }
-
-    // Display loading indicator
-
-    await originalFile.copy(destinationPath);
-    print('File copied to $destinationPath');
-
-
-  } catch(e) {
-      AppLogger(
-                logLevel: LogLevel.error,
-                message: 'copied file',
-                fileName: basename((originalFile.path)))
-            .logToFile();
-  }
-}
-
-
-
-
-
-  Future<void> _copyMoveFile(File originalFile, File destinationFolder,
-      String sourceFilePath, bool deleteAfterTransfer) async {
-    String destinationFile = "${destinationFolder.path}\\$sourceFilePath";
-
-    try {
-      // check if file exits
-      if (fileExists(destinationFile)) {
-        AppLogger(
-                logLevel: LogLevel.error,
-                message: "file already exists",
-                fileName: basename((File(destinationFile).path)))
-            .logToFile();
-      } else {
-        showLoadingScreen();
-
-        isTransferingFile = true.obs;
-        await FileCopy.copyFile(
-          originalFile,
-          destinationFile,
-          onChangeProgress: (progress) {
-            transferProgress.value = progress.progress;
-          },
-        );
-
-        if (deleteAfterTransfer) {
-          originalFile.delete();
-        }
-
-        Get.back(closeOverlays: true);
-
-        AppLogger(
-                logLevel: LogLevel.copy,
-                message: !deleteAfterTransfer ? 'copied file' : "moved file",
-                fileName: basename((File(destinationFile).path)))
-            .logToFile();
+  void fileTransferOperation(
+      List<String> originalFiles, String targetPath) async {
+    List<File> files = [];
+    if (originalFiles.isNotEmpty) {
+      for (var element in originalFiles) {
+        print(element);
+        files.add(File(element));
+        await copyFile(File(element), targetPath);
       }
-
-          
-      // close the overlay
-    } catch (e) {
-      Get.back(closeOverlays: true);
-
-      AppLogger(
-        logLevel: LogLevel.error,
-        message: !deleteAfterTransfer ? 'error copying file' : "error moving file",
-        fileName: basename((File(destinationFile).path)),
-      ).logToFile();
     }
-    isTransferingFile = false.obs;
   }
 
-  bool fileExists(String path) => File(path).existsSync();
-
-  showLoadingScreen() {
-    Get.dialog(Dialog(
-      backgroundColor: Colors.black,
-      child: Column(
-        children: [
-          Obx(
-            () => LinearProgressIndicator(value: (transferProgress.value)),
+  DialogAction(String fileName) {
+    Dialogs.bottomMaterialDialog(
+        title: 'Copy file',
+        msg: '${p.basename((fileName))}',
+        context: Get.context!,
+        customView: FileTransferPrgressBar(),
+        customViewPosition: CustomViewPosition.BEFORE_ACTION,
+        actions: [
+          IconsButton(
+            onPressed: () {
+              Navigator.pop(Get.context!);
+            },
+            text: 'Abort',
+            iconData: Icons.delete,
+            color: Colors.red,
+            textStyle: TextStyle(color: Colors.white),
+            iconColor: Colors.white,
           ),
-          Obx(
-            () => Text(
-              "${((transferProgress.value * 100).roundToDouble()).clamp(0, 100).toInt()}%",
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ],
-      ),
-    ));
+        ]);
   }
 
-  Future<void> openFileExplorer(String url) async {
-    UrlLaunchOptions.openFileExplorer(url);
+  Future<LogLevel> copyFile(File originalFile, String destinationPath) async {
+    print("begin");
+
+    String destinationFullPath =
+        p.join(destinationPath, p.basename(originalFile.path));
+
+    if (File(destinationFullPath).existsSync()) {
+      print("file already exists");
+      DialogSimpleConfirm(
+          LogLevel.copy, "file arlready exists", originalFile.path);
+      return LogLevel.duplicate;
+    }
+
+    isTransferingFile.value = true;
+    DialogAction(originalFile.path);
+    await FileCopy.copyFile(
+      originalFile,
+      destinationFullPath,
+      onChangeProgress: (progress) {
+        transferProgress.value = progress.progress;
+        print(progress.progress);
+      },
+    );
+    print("copied" + destinationFullPath);
+    isTransferingFile.value = false;
+    Navigator.pop(Get.context!);
+
+    return LogLevel.copy;
   }
+
+  Future<void> openFileExplorer(String url) async =>
+      UrlLaunchOptions.openFileExplorer(url);
 
   void changeMode(int idx) =>
       copyOrMove.value = idx == 0 ? CopyOrMove.Copy : CopyOrMove.Move;
+
+  Widget FileTransferPrgressBar() {
+    return Obx(
+      () => Column(
+        children: [
+          LinearProgressIndicator(value: (transferProgress.value)),
+          Text(
+            "${((transferProgress.value * 100).roundToDouble()).clamp(0, 100).toInt()}%",
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.black, fontSize: 15),
+          ),
+        ],
+      ),
+    );
+  }
 }

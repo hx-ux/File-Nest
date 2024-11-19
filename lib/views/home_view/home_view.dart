@@ -65,4 +65,3 @@ class Home_Page extends GetView<HOME_Controller> {
     ));
   }
 }
-

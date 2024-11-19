@@ -1,6 +1,5 @@
 import 'package:file_nest/core/theme/colors.style.dart';
 import 'package:file_nest/core/theme/fonts.style.dart';
-import 'package:file_nest/main.dart';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';

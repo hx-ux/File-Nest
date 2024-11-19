@@ -1,4 +1,4 @@
-import 'package:file_nest/core/utilities/Explorer.dart';
+import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/views/controllers/SETTINGS_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:file_nest/services/snackbar_information.dart';
+import 'package:file_nest/services/Dialogs.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:intl/date_symbol_data_local.dart';
 
-enum LogLevel { debug, info, warning, error, copy, move }
+enum LogLevel { debug, info, warning, error, copy, move,duplicate }
 
 const logFileFileName = "file_nest_log.txt";
 
@@ -116,14 +116,14 @@ class AppLogger {
     }
   }
 
-  static SnackBarType logEnumToSnackBarenum(LogLevel level) {
+  static String logEnumToSnackBarenum(LogLevel level) {
     switch (level) {
       case LogLevel.debug || LogLevel.info || LogLevel.copy || LogLevel.move:
-        return SnackBarType.success;
+        return "Succsess";
       case LogLevel.warning || LogLevel.error:
-        return SnackBarType.error;
+        return "Error";
       default:
-        return SnackBarType.error;
+        return "Error";
     }
   }
 

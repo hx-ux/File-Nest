@@ -36,8 +36,10 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
       onDragDone: (detail) {
         controller.selectedNode = TargetArtefact("", "");
         controller.isOverNode = false.obs;
-        controller.moveOrCopyFile(
-            File((detail.files.first).path), (widget.artefact.url));
+
+        List<String> files = [];
+        detail.files.forEach((file) => files.add(file.path));
+        controller.fileTransferOperation(files, (widget.artefact.url));
       },
       onDragEntered: (detail) {
         controller.selectedNode = widget.artefact;
@@ -64,47 +66,64 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
                 ? IColors.attentionColor
                 : Colors.white,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start, // add space
-            children: [
-              IconButton(
-                onPressed: () {
-                  widget.showInfo.value = !widget.showInfo.value;
-                },
-                icon: const Icon(FluentIcons.info_24_regular),
-                color: IColors.iconsColorArteFacts,
-              ),
-              if (!widget.showInfo.value)
-                IconButton(
-                  onPressed: () {
-                    controller.openFileExplorer((widget.artefact.url));
-                  },
-                  icon: const Icon(FluentIcons.document_folder_24_regular),
-                  color: IColors.iconsColorArteFacts,
+          child: controller.isOverNode.value &&
+                  controller.dropTragetIdentifier.value ==
+                      widget.DropTragetIdentifier
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center, // add space
+                  children: [
+                    Text(
+                      "Copy files to ${widget.artefact.name}",
+                      style: const TextStyle(
+                        color: IColors.iconsColorArteFacts,
+                        fontFamily: IFont.primaryFontBold,
+                        fontSize: 15,
+                      ),
+                    )
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.start, // add space
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        widget.showInfo.value = !widget.showInfo.value;
+                      },
+                      icon: const Icon(FluentIcons.info_24_regular),
+                      color: IColors.iconsColorArteFacts,
+                    ),
+                    if (!widget.showInfo.value)
+                      IconButton(
+                        onPressed: () {
+                          controller.openFileExplorer((widget.artefact.url));
+                        },
+                        icon:
+                            const Icon(FluentIcons.document_folder_24_regular),
+                        color: IColors.iconsColorArteFacts,
+                      ),
+                    if (!widget.showInfo.value)
+                      IconButton(
+                        onPressed: () {
+                          controller.deleteArtefact(widget.artefact);
+                        },
+                        icon: const Icon(FluentIcons.bin_recycle_24_regular),
+                        color: IColors.iconsColorArteFacts,
+                      ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                    Center(
+                      child: Text(
+                        widget.showInfo.value
+                            ? widget.artefact.url.toString()
+                            : widget.artefact.name.toString(),
+                        style: const TextStyle(
+                          color: IColors.iconsColorArteFacts,
+                          fontFamily: IFont.primaryFontBold,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              if (!widget.showInfo.value)
-                IconButton(
-                  onPressed: () {
-                    controller.deleteArtefact(widget.artefact);
-                  },
-                  icon: const Icon(FluentIcons.bin_recycle_24_regular),
-                  color: IColors.iconsColorArteFacts,
-                ),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
-              Center(
-                child: Text(
-                  widget.showInfo.value
-                      ? widget.artefact.url.toString()
-                      : widget.artefact.name.toString(),
-                  style: const TextStyle(
-                    color: IColors.iconsColorArteFacts,
-                    fontFamily: IFont.primaryFontBold,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ));
   }
 }
