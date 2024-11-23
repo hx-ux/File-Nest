@@ -87,8 +87,10 @@ class HOME_Controller extends GetxController {
 
   void fileTransferOperation(
       List<String> originalFiles, String targetPath) async {
+
     List<File> files = [];
     if (originalFiles.isNotEmpty) {
+      
       for (var element in originalFiles) {
         print(element);
         files.add(File(element));
@@ -97,12 +99,12 @@ class HOME_Controller extends GetxController {
     }
   }
 
-  DialogAction(String fileName) {
+  DialogAction(fileName) {
     Dialogs.bottomMaterialDialog(
         title: 'Copy file',
-        msg: '${p.basename((fileName))}',
+        msg: p.basename((fileName)),
         context: Get.context!,
-        customView: FileTransferPrgressBar(),
+        customView: FileTransferProgressBar(transferProgress, false),
         customViewPosition: CustomViewPosition.BEFORE_ACTION,
         actions: [
           IconsButton(
@@ -119,20 +121,22 @@ class HOME_Controller extends GetxController {
   }
 
   Future<LogLevel> copyFile(File originalFile, String destinationPath) async {
-    print("begin");
+    print("begin copy file");
 
     String destinationFullPath =
         p.join(destinationPath, p.basename(originalFile.path));
 
     if (File(destinationFullPath).existsSync()) {
-      print("file already exists");
       DialogSimpleConfirm(
-          LogLevel.copy, "file arlready exists", originalFile.path);
+          LogLevel.error, "file arlready exists", originalFile.path);
       return LogLevel.duplicate;
     }
 
     isTransferingFile.value = true;
-    DialogAction(originalFile.path);
+
+    DialogAction(
+      originalFile.path,
+    );
     await FileCopy.copyFile(
       originalFile,
       destinationFullPath,
@@ -141,10 +145,10 @@ class HOME_Controller extends GetxController {
         print(progress.progress);
       },
     );
-    print("copied" + destinationFullPath);
     isTransferingFile.value = false;
     Navigator.pop(Get.context!);
-
+    DialogSimpleConfirm(LogLevel.copy, "File copied", originalFile.path,
+        showDuration: 1000);
     return LogLevel.copy;
   }
 
@@ -153,19 +157,4 @@ class HOME_Controller extends GetxController {
 
   void changeMode(int idx) =>
       copyOrMove.value = idx == 0 ? CopyOrMove.Copy : CopyOrMove.Move;
-
-  Widget FileTransferPrgressBar() {
-    return Obx(
-      () => Column(
-        children: [
-          LinearProgressIndicator(value: (transferProgress.value)),
-          Text(
-            "${((transferProgress.value * 100).roundToDouble()).clamp(0, 100).toInt()}%",
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.black, fontSize: 15),
-          ),
-        ],
-      ),
-    );
-  }
 }
