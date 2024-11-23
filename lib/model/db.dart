@@ -1,3 +1,4 @@
+import 'package:file_nest/config.dart';
 import 'package:file_nest/model/TargetArtefact.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -12,7 +13,7 @@ class DBApdater {
   static late Isar isar;
 
   static Future<Isar> init() async {
-    final dir = await getApplicationDocumentsDirectory();
+    final dir = await getSettingFolderPath();
     isar = await Isar.open(
       [TargetArtefactSchema],
       inspector: true,
@@ -38,5 +39,4 @@ class DBApdater {
   static Future<void> deleteArteFact(int taId) async {
     await isar.writeTxn(() => isar.targetArtefacts.delete(taId));
   }
-
 }
