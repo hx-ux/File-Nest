@@ -2,7 +2,9 @@
 
 ## About
 
-File Nest  is a lightweight and intuitive file copying application built with Flutter. Easily cleanup your desktop , by copying files to folders using a GUI.
+File Nest  is a lightweight and intuitive file copying application built with Flutter. <br>
+Easily cleanup your desktop , by copying files to folders using a GUI. <br>
+![file_nest](https://github.com/user-attachments/assets/efbc4696-e39e-4b90-9c68-1236349f9850)
 
 #### Status
 
@@ -21,4 +23,4 @@ File Nest  is a lightweight and intuitive file copying application built with Fl
 
 ## Missing Features
 * Files can only be copied, not moved
-* 
+
