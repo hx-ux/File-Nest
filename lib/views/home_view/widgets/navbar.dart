@@ -33,7 +33,7 @@ class Navbar extends GetView<HOME_Controller> {
           if (!subpage)
             ElevatedButton(
               onPressed: () {
-                Get.to(LogsPage());
+                Get.to(() => LogsPage());
               },
               child: const Column(
                 children: [
@@ -46,7 +46,7 @@ class Navbar extends GetView<HOME_Controller> {
           if (!subpage)
             ElevatedButton(
               onPressed: () {
-                Get.to(SettingsPage());
+                Get.to(() => SettingsPage());
               },
               child: const Column(
                 children: [

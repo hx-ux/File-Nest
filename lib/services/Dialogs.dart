@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:file_nest/core/theme/colors.style.dart';
 import 'package:file_nest/model/Logger.dart';
+import 'package:file_nest/model/log_level.dart';
 import 'package:file_nest/views/bindings/binding.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';

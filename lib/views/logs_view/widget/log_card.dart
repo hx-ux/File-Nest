@@ -17,10 +17,10 @@ class LoggerCard extends StatelessWidget {
             ListTile(
               leading: Icon(logger.icon ?? FluentIcons.info_24_regular),
               title: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(logger.message, style: TextStyle(fontSize: 14)),
-                  Text(logger.GetTimeStampAsString(),
+                  Text(logger.timestamp.toString(),
                       style: TextStyle(fontSize: 12)),
                 ],
               ),

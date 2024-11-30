@@ -11,15 +11,14 @@ class AppLogger {
   String message;
   String fileName;
   String destination;
-  String? timestamp;
+  DateTime? timestamp;
   IconData? icon;
   Color? color;
 
   // DateFormat DateTimeFormat() => DateFormat('dd/MM/yy HH:mm:ss');
-  String GetTimeStampAsString() {
-    var formatter = DateFormat('dd.MM.yyyy HH:mm:ss', 'de_DE');
-    return formatter.format(DateTime.now());
-  }
+
+  static var timeStampFormatter = DateFormat('dd.MM.yyyy HH:mm:ss', 'de_DE');
+  String getTimeStampAsString() => timeStampFormatter.format(DateTime.now());
 
   static Future<File> logFilePath() async => getLogFilePath();
 
@@ -50,7 +49,7 @@ class AppLogger {
     final file = await logFilePath();
     String logType = logtype.name;
     final log = file.openWrite(mode: FileMode.append);
-    String timeStamp = GetTimeStampAsString();
+    String timeStamp = getTimeStampAsString();
 
     log.writeln('$logType| $timeStamp | $message | $filename | $destination');
     log.close();
@@ -59,16 +58,21 @@ class AppLogger {
   Future<List<AppLogger>> readLog() async {
     final file = await logFilePath();
     final lines = await file.readAsLines();
-    return lines.map(_logToClass).toList();
+
+    List<AppLogger> logList = [];
+    for (var element in lines) {
+      logList.add(_readFromLogFile(element));
+    }
+    return logList;
   }
 
-  AppLogger _logToClass(String message) {
+  AppLogger _readFromLogFile(String message) {
     {
       try {
         var parts = message.split('|');
         AppLogger appLogger = AppLogger();
         appLogger.logLevel = LogLevel.values.byName(parts[0]);
-        appLogger.timestamp = parts[1];
+        // appLogger.timestamp = timeStampFormatter.parse(parts[1]).toLocal();
         appLogger.message = parts[2];
         appLogger.fileName = parts[3];
         appLogger.destination = parts[4];

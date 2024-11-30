@@ -6,6 +6,7 @@ import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/model/Logger.dart';
 import 'package:file_nest/model/TargetArtefact.dart';
 import 'package:file_nest/model/db.dart';
+import 'package:file_nest/model/log_level.dart';
 import 'package:file_nest/services/Dialogs.dart';
 
 import 'package:file_picker/file_picker.dart';
@@ -29,11 +30,10 @@ class HOME_Controller extends GetxController {
 
   var copyOrMove = CopyOrMove.Copy.obs;
   TargetArtefact? selectedNode = TargetArtefact("", "");
-  //gui stuff
+  //
   RxBool isOverNode = false.obs;
   RxInt dropTragetIdentifier = 0.obs;
-
-  RxBool isTransferingFile = false.obs;
+  //
   RxDouble transferProgress = 0.0.obs;
   //
 
@@ -43,10 +43,8 @@ class HOME_Controller extends GetxController {
     loadAllArtefact();
   }
 
-  void loadAllArtefact() async {
-    DBApdater.getAllTargetArtefacts()
-        .then((value) => allArtefacts.value = value);
-  }
+  void loadAllArtefact() async => DBApdater.getAllTargetArtefacts()
+      .then((value) => allArtefacts.value = value);
 
   Future<void> addArtefact() async {
     try {
@@ -61,7 +59,7 @@ class HOME_Controller extends GetxController {
         AppLogger(
           logLevel: LogLevel.info,
           message: "created folder",
-          fileName: selectedDirectory.toString(),
+          fileName: selectedDirectory,
         ).logToFile();
         update();
       }
@@ -75,31 +73,49 @@ class HOME_Controller extends GetxController {
   }
 
   void deleteArtefact(TargetArtefact id) async {
-    DBApdater.deleteArteFact(id.id);
-    allArtefacts.removeWhere((element) => element.id == id.id);
-
-    AppLogger(
-      logLevel: LogLevel.info,
-      message: "Entry deleted",
-      fileName: id.name.toString(),
-    ).logToFile();
-  }
-
-  void fileTransferOperation(
-      List<String> originalFiles, String targetPath) async {
-
-    List<File> files = [];
-    if (originalFiles.isNotEmpty) {
-      
-      for (var element in originalFiles) {
-        print(element);
-        files.add(File(element));
-        await copyFile(File(element), targetPath);
-      }
+    try {
+      DBApdater.deleteArteFact(id.id);
+      allArtefacts.removeWhere((element) => element.id == id.id);
+      AppLogger(
+        logLevel: LogLevel.info,
+        message: "Entry deleted",
+        fileName: id.url,
+      ).logToFile();
+    } catch (e) {
+      AppLogger(
+        logLevel: LogLevel.error,
+        message: "Failed to delete Entry ",
+        fileName: id.url,
+      ).logToFile();
     }
   }
 
-  DialogAction(fileName) {
+  void fileTransferOperation(List<String> inputFiles, String targetPath) async {
+    if (inputFiles.isEmpty) return;
+
+    List<File> ErrorFiles = [];
+
+    List<File> toCopyFiles = inputFiles
+        .map((filePath) => File(filePath))
+        .where((file) => !doesFileExits(file, targetPath))
+        .toList();
+
+    if (toCopyFiles.isEmpty) return;
+
+    for (var i = 0; i < toCopyFiles.length; i++) {
+      await copyFile(toCopyFiles[i], targetPath, toCopyFiles.length, i);
+    }
+    DialogSimpleConfirm(
+      LogLevel.copy,
+      toCopyFiles.length == 1
+          ? "copied file"
+          : "copied ${toCopyFiles.length} files",
+      toCopyFiles.length == 1 ? toCopyFiles[0].path : null,
+      showDuration: 1000,
+    );
+  }
+
+  CopyDialog(fileName) {
     Dialogs.bottomMaterialDialog(
         title: 'Copy file',
         msg: p.basename((fileName)),
@@ -120,36 +136,45 @@ class HOME_Controller extends GetxController {
         ]);
   }
 
-  Future<LogLevel> copyFile(File originalFile, String destinationPath) async {
-    print("begin copy file");
-
+  bool doesFileExits(
+    File originalFile,
+    String destinationPath,
+  ) {
     String destinationFullPath =
         p.join(destinationPath, p.basename(originalFile.path));
+    return (File(destinationFullPath).existsSync());
+  }
 
-    if (File(destinationFullPath).existsSync()) {
-      DialogSimpleConfirm(
-          LogLevel.error, "file arlready exists", originalFile.path);
-      return LogLevel.duplicate;
+  Future<LogLevel> copyFile(File originalFile, String destinationPath,
+      int copyListLen, int currPos) async {
+    try {
+      String destinationFullPath =
+          p.join(destinationPath, p.basename(originalFile.path));
+
+      CopyDialog(p.basename(originalFile.path));
+      await FileCopy.copyFile(
+        originalFile,
+        destinationFullPath,
+        onChangeProgress: (progress) {
+          transferProgress.value = progress.progress;
+          print(progress.progress);
+        },
+      );
+      AppLogger(
+        logLevel: LogLevel.copy,
+        message: "Copied file",
+        fileName: originalFile.path,
+      ).logToFile();
+      Navigator.pop(Get.context!);
+      return LogLevel.copy;
+    } catch (e) {
+      AppLogger(
+        logLevel: LogLevel.error,
+        message: "Failed to copy file",
+        fileName: originalFile.path,
+      ).logToFile();
+      return LogLevel.error;
     }
-
-    isTransferingFile.value = true;
-
-    DialogAction(
-      originalFile.path,
-    );
-    await FileCopy.copyFile(
-      originalFile,
-      destinationFullPath,
-      onChangeProgress: (progress) {
-        transferProgress.value = progress.progress;
-        print(progress.progress);
-      },
-    );
-    isTransferingFile.value = false;
-    Navigator.pop(Get.context!);
-    DialogSimpleConfirm(LogLevel.copy, "File copied", originalFile.path,
-        showDuration: 1000);
-    return LogLevel.copy;
   }
 
   Future<void> openFileExplorer(String url) async =>
