@@ -18,3 +18,7 @@ File Nest  is a lightweight and intuitive file copying application built with Fl
 * Simple and intuitive interface
 * Database included for saving favorites
 * Logging system
+
+## Missing Features
+* Files can only be copied, not moved
+* 
