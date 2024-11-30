@@ -1,4 +1,7 @@
+import 'package:file_nest/config.dart';
 import 'package:file_nest/core/utilities/UrlLauncher.dart';
+import 'package:file_nest/model/Logger.dart';
+import 'package:file_nest/model/log_level.dart';
 import 'package:file_nest/views/controllers/SETTINGS_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +40,11 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
           child: ElevatedButton(
             onPressed: () {
               controller.clearDataBase();
+              AppLogger(
+                      logLevel: LogLevel.error,
+                      message: "Clear Database- not yet implemented",	
+                      fileName: "")
+                  .logToFile();
             },
             child: const Text("Clear database"),
           ),
@@ -46,20 +54,13 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
           width: MediaQuery.of(context).size.width * 0.6,
           child: ElevatedButton(
             onPressed: () {
-             UrlLaunchOptions.launchInBrowser("https://github.com/hx-ux/File-Nest");
+              UrlLaunchOptions.launchInBrowser(
+                  "https://github.com/hx-ux/File-Nest");
             },
             child: const Text("Github"),
           ),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.1,
-          width: MediaQuery.of(context).size.width * 0.6,
-          child: ElevatedButton(
-            onPressed: () {
-            },
-            child: const Text("Always move "),
-          ),
-        ),
+    
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.1,
           width: MediaQuery.of(context).size.width * 0.6,
@@ -83,6 +84,17 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
                   'Always move ${controller.alwaysMove.value ? "✔" : "✘"}',
                 )),
           ),
+        ),
+
+            SizedBox(
+          height: MediaQuery.of(context).size.height * 0.1,
+          width: MediaQuery.of(context).size.width * 0.6,
+          child:  Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+           Text("${AppSettings.appVersion}\n${AppSettings.currPlatform}",
+           style: TextStyle(color: Colors.grey),),
+         ])
         ),
       ],
     ));
