@@ -41,11 +41,12 @@ ThemeData appThemeDataBright = ThemeData(
   // overides the navbar buttons
   elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-    backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+        iconColor: WidgetStateProperty.resolveWith<Color?>(
       (Set<WidgetState> states) {
-        return IColors.backgroundLight;
+        return IColors.backgroundDark;
       },
     ),
+ 
     elevation: WidgetStateProperty.resolveWith<double?>(
       (Set<WidgetState> states) {
         return 0.0;
@@ -54,10 +55,12 @@ ThemeData appThemeDataBright = ThemeData(
     
   )),
 
+primaryIconTheme: IconThemeData(color: IColors.backgroundDark),
+
   textTheme: const TextTheme(
     bodyMedium: TextStyle(
         color: IColors.backgroundDark,
         fontFamily: IFont.primaryFontBold,
         fontSize: 15),
   ),
-  iconTheme: const IconThemeData(color: IColors.backgroundLight));
+  iconTheme: const IconThemeData(color: IColors.backgroundDark));

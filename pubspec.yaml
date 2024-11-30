@@ -13,7 +13,6 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   get: ^4.6.6
-  url_launcher: ^6.1.14
   
   window_manager: ^0.4.3
   flutter_screenutil: ^5.9.0
@@ -31,8 +30,7 @@ dependencies:
   flutter_toggle_tab: ^1.4.1
   fluentui_system_icons: ^1.1.236
   intl: ^0.20.0
-  global_configuration: ^2.0.0
-  open_dir: ^0.0.1+6
+  material_dialogs: ^1.1.5
 
 
 dev_dependencies:

@@ -1,13 +1,21 @@
 import 'package:file_nest/model/Logger.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class LOG_Controller extends GetxController {
-  List<AppLogger> logList = [];
-  List<String> logListString = [];
+  var logList = <AppLogger>[].obs; // logList.
+
   @override
-  void onInit() async {
+  void onInit() {
+    // TODO: implement onInit
+    loadContext();
     super.onInit();
-    AppLogger logger =  AppLogger();
-    logList = await logger.readLog();
+  }
+
+  void loadContext() async {
+    await AppLogger().readLog().then((x)=> logList.value = x);
+    for (var element in logList) {
+      print(element.message);
+    }
   }
 }

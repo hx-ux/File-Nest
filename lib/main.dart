@@ -10,15 +10,15 @@ import 'package:file_nest/views/home_view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:global_configuration/global_configuration.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   await DBApdater.init();
-  await GlobalConfiguration().loadFromAsset("app_settings");
 
+  initializeDateFormatting('de_DE', null);
   WindowOptions windowOptions = const WindowOptions(
     minimumSize: AppSettings.minSize,
     size: AppSettings.startSize,
@@ -44,9 +44,7 @@ Future<void> main() async {
           initialBinding: HomeBindings(),
           builder: (context, widget) {
             return Theme(
-              data: (GlobalConfiguration().getValue("darkTheme"))
-                  ? appThemeDataDark
-                  : appThemeDataBright,
+              data: appThemeDataDark,
               child: MediaQuery(
                 data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
                 child: widget!,

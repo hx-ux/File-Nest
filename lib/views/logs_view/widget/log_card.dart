@@ -1,26 +1,37 @@
+import 'package:file_nest/model/Logger.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 
-class CardExample extends StatelessWidget {
-  const CardExample({super.key, required this.message, required this.time, required this.icon, required this.color, required this.filena});
-
-final String message;
-final String filena;
-final String time;
-final IconData icon;
-final Color color;	
+class LoggerCard extends StatelessWidget {
+  LoggerCard({super.key, required this.logger});
+  final AppLogger logger;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Card(
-        color: color,
+        color: logger.color ?? Colors.blue,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-             ListTile(
-              leading: Icon(icon),
-              title: Text(filena),
-              subtitle: Text(time + " "+  message) ,
+            ListTile(
+              leading: Icon(logger.icon ?? FluentIcons.info_24_regular),
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(logger.message, style: TextStyle(fontSize: 14)),
+                  Text(logger.timestamp.toString(),
+                      style: TextStyle(fontSize: 12)),
+                ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(logger.fileName,
+                      style:
+                          TextStyle(fontSize: 12, fontStyle: FontStyle.italic))
+                ],
+              ),
             ),
           ],
         ),

@@ -2,16 +2,20 @@ import 'dart:io';
 
 import 'package:file_copy/file_copy.dart';
 import 'package:file_nest/core/theme/app_theme.dart';
-import 'package:file_nest/core/utilities/Explorer.dart';
+import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/model/Logger.dart';
 import 'package:file_nest/model/TargetArtefact.dart';
 import 'package:file_nest/model/db.dart';
+import 'package:file_nest/model/log_level.dart';
+import 'package:file_nest/services/Dialogs.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:material_dialogs/dialogs.dart';
+import 'package:material_dialogs/shared/types.dart';
+import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:path/path.dart' as p;
-import 'package:path/path.dart';
 import 'package:uuid/uuid.dart';
 
 enum CopyOrMove {
@@ -26,11 +30,10 @@ class HOME_Controller extends GetxController {
 
   var copyOrMove = CopyOrMove.Copy.obs;
   TargetArtefact? selectedNode = TargetArtefact("", "");
-  //gui stuff
+  //
   RxBool isOverNode = false.obs;
   RxInt dropTragetIdentifier = 0.obs;
-  RxBool isTransferingFile = false.obs;
-  var showTransferProgress = false.obs;
+  //
   RxDouble transferProgress = 0.0.obs;
   //
 
@@ -40,10 +43,8 @@ class HOME_Controller extends GetxController {
     loadAllArtefact();
   }
 
-  void loadAllArtefact() async {
-    DBApdater.getAllTargetArtefacts()
-        .then((value) => allArtefacts.value = value);
-  }
+  void loadAllArtefact() async => DBApdater.getAllTargetArtefacts()
+      .then((value) => allArtefacts.value = value);
 
   Future<void> addArtefact() async {
     try {
@@ -58,116 +59,126 @@ class HOME_Controller extends GetxController {
         AppLogger(
           logLevel: LogLevel.info,
           message: "created folder",
-          fileName: selectedDirectory.toString(),
+          fileName: selectedDirectory,
         ).logToFile();
         update();
       }
     } catch (e) {
       AppLogger(
         logLevel: LogLevel.error,
-        message: "cannot add folder $e",
+        message: "error creating folder",
         fileName: "$e",
       ).logToFile();
     }
   }
 
   void deleteArtefact(TargetArtefact id) async {
-    DBApdater.deleteArteFact(id.id);
-    allArtefacts.removeWhere((element) => element.id == id.id);
-
-    AppLogger(
-      logLevel: LogLevel.info,
-      message: "Entry deleted",
-      fileName: id.name.toString(),
-    ).logToFile();
-  }
-
-  void moveOrCopyFile(File originalFile, String targetPath) async {
-    // display the loading overlay
-    String sourceFilePath = p.basename(originalFile.path);
-    bool deleteFileAfterTransfer = copyOrMove.value == CopyOrMove.Move;
-
-    await _copyMoveFile(originalFile, File(targetPath), sourceFilePath,
-        deleteFileAfterTransfer);
-  }
-
-  Future<void> _copyMoveFile(File originalFile, File destinationFolder,
-      String sourceFilePath, bool deleteAfterTransfer) async {
-    String destinationFile = "${destinationFolder.path}\\$sourceFilePath";
-    String message = "file already exists";
-
     try {
-      // check if file exits
-      if (fileExists(destinationFile)) {
-        AppLogger(
-                logLevel: LogLevel.error,
-                message: message,
-                fileName: basename((File(destinationFile).path)))
-            .logToFile();
-      } else {
-        showLoadingScreen();
-
-        isTransferingFile = true.obs;
-        await FileCopy.copyFile(
-          originalFile,
-          destinationFile,
-          onChangeProgress: (progress) {
-            transferProgress.value = progress.progress;
-          },
-        );
-
-        if (deleteAfterTransfer) {
-          originalFile.delete();
-        }
-
-        message = !deleteAfterTransfer ? 'copied file' : "moved file";
-        Get.back(closeOverlays: true);
-       
-        AppLogger(
-                logLevel: LogLevel.copy,
-                message: message,
-                fileName: basename((File(destinationFile).path)))
-            .logToFile();
-      }
-
-      message =
-          !deleteAfterTransfer ? 'error copying file' : "error moving file";
-      // close the overlay
+      DBApdater.deleteArteFact(id.id);
+      allArtefacts.removeWhere((element) => element.id == id.id);
+      AppLogger(
+        logLevel: LogLevel.info,
+        message: "Entry deleted",
+        fileName: id.url,
+      ).logToFile();
     } catch (e) {
-      Get.back(closeOverlays: true);
-
       AppLogger(
         logLevel: LogLevel.error,
-        message: message,
-        fileName: basename((File(destinationFile).path)),
+        message: "Failed to delete Entry ",
+        fileName: id.url,
       ).logToFile();
     }
-    isTransferingFile = false.obs;
   }
 
-  bool fileExists(String path) => File(path).existsSync();
+  void fileTransferOperation(List<String> inputFiles, String targetPath) async {
+    if (inputFiles.isEmpty) return;
 
-  showLoadingScreen() {
-    Get.dialog(Dialog(
-      backgroundColor: Colors.black,
-      child: Column(
-        children: [
-          Obx(
-            () => LinearProgressIndicator(value: (transferProgress.value)),
+    List<File> ErrorFiles = [];
+
+    List<File> toCopyFiles = inputFiles
+        .map((filePath) => File(filePath))
+        .where((file) => !doesFileExits(file, targetPath))
+        .toList();
+
+    if (toCopyFiles.isEmpty) return;
+
+    for (var i = 0; i < toCopyFiles.length; i++) {
+      await copyFile(toCopyFiles[i], targetPath, toCopyFiles.length, i);
+    }
+    DialogSimpleConfirm(
+      LogLevel.copy,
+      toCopyFiles.length == 1
+          ? "copied file"
+          : "copied ${toCopyFiles.length} files",
+      toCopyFiles.length == 1 ? toCopyFiles[0].path : null,
+      showDuration: 1000,
+    );
+  }
+
+  CopyDialog(fileName) {
+    Dialogs.bottomMaterialDialog(
+        title: 'Copy file',
+        msg: p.basename((fileName)),
+        context: Get.context!,
+        customView: FileTransferProgressBar(transferProgress, false),
+        customViewPosition: CustomViewPosition.BEFORE_ACTION,
+        actions: [
+          IconsButton(
+            onPressed: () {
+              Navigator.pop(Get.context!);
+            },
+            text: 'Abort',
+            iconData: Icons.delete,
+            color: Colors.red,
+            textStyle: TextStyle(color: Colors.white),
+            iconColor: Colors.white,
           ),
-          Obx(
-            () => Text(
-              "${((transferProgress.value * 100).roundToDouble()).clamp(0, 100).toInt()}%",
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ],
-      ),
-    ));
+        ]);
   }
 
-  void openFileExplorer(String url) => FileExplorer.openFileExplorer(url);
+  bool doesFileExits(
+    File originalFile,
+    String destinationPath,
+  ) {
+    String destinationFullPath =
+        p.join(destinationPath, p.basename(originalFile.path));
+    return (File(destinationFullPath).existsSync());
+  }
+
+  Future<LogLevel> copyFile(File originalFile, String destinationPath,
+      int copyListLen, int currPos) async {
+    try {
+      String destinationFullPath =
+          p.join(destinationPath, p.basename(originalFile.path));
+
+      CopyDialog(p.basename(originalFile.path));
+      await FileCopy.copyFile(
+        originalFile,
+        destinationFullPath,
+        onChangeProgress: (progress) {
+          transferProgress.value = progress.progress;
+          print(progress.progress);
+        },
+      );
+      AppLogger(
+        logLevel: LogLevel.copy,
+        message: "Copied file",
+        fileName: originalFile.path,
+      ).logToFile();
+      Navigator.pop(Get.context!);
+      return LogLevel.copy;
+    } catch (e) {
+      AppLogger(
+        logLevel: LogLevel.error,
+        message: "Failed to copy file",
+        fileName: originalFile.path,
+      ).logToFile();
+      return LogLevel.error;
+    }
+  }
+
+  Future<void> openFileExplorer(String url) async =>
+      UrlLaunchOptions.openFileExplorer(url);
 
   void changeMode(int idx) =>
       copyOrMove.value = idx == 0 ? CopyOrMove.Copy : CopyOrMove.Move;

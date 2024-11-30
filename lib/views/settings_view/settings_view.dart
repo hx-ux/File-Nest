@@ -1,7 +1,9 @@
-
+import 'package:file_nest/config.dart';
+import 'package:file_nest/core/utilities/UrlLauncher.dart';
+import 'package:file_nest/model/Logger.dart';
+import 'package:file_nest/model/log_level.dart';
 import 'package:file_nest/views/controllers/SETTINGS_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
-import 'package:file_nest/views/settings_view/widgets/AboutPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +16,8 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
-      children: <Widget>[
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Navbar(
@@ -37,6 +40,11 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
           child: ElevatedButton(
             onPressed: () {
               controller.clearDataBase();
+              AppLogger(
+                      logLevel: LogLevel.error,
+                      message: "Clear Database- not yet implemented",	
+                      fileName: "")
+                  .logToFile();
             },
             child: const Text("Clear database"),
           ),
@@ -46,57 +54,48 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
           width: MediaQuery.of(context).size.width * 0.6,
           child: ElevatedButton(
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AboutProjectDialog();
-                },
-              );
+              UrlLaunchOptions.launchInBrowser(
+                  "https://github.com/hx-ux/File-Nest");
             },
-            child: const Text("About"),
+            child: const Text("Github"),
           ),
         ),
-        // SizedBox(
-        //   height: MediaQuery.of(context).size.height * 0.1,
-        //   width: MediaQuery.of(context).size.width * 0.6,
-        //   child: Row(
-        //     children: [
-        //       const Text(
-        //         'Always Move',
-        //         style: TextStyle(
-        //           color: Colors.white,
-        //         ),
-        //       ),
-        //       Obx(() => Checkbox(
-        //             value: controller.alwaysMove.value,
-        //             onChanged: (bool? value) {
-        //               controller.setDefaultCopyMove(value!);
-        //             },
-        //           ))
-        //     ],
-        //   ),
-        // ),
-        // SizedBox(
-        //   height: MediaQuery.of(context).size.height * 0.1,
-        //   width: MediaQuery.of(context).size.width * 0.6,
-        
-        //   child: Row(
-        //     children: [
-        //       const Text(
-        //         'Dark Mode',
-        //         style: TextStyle(
-        //           color: Colors.white,
-        //         ),
-        //       ),
-        //       Obx(() => Checkbox(
-        //             value: controller.isDarkMode.value,
-        //             onChanged: (bool? value) {
-        //               controller.toggleColorMode(value!);
-        //             },
-        //           ))
-        //     ],
-        //   ),
-        // ),
+    
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.1,
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: ElevatedButton(
+            onPressed: () {
+              controller.toggleColorMode();
+            },
+            child: Obx(() => Text(
+                  'Dark Mode ${controller.isDarkMode.value ? "✔" : "✘"}',
+                )),
+          ),
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.1,
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: ElevatedButton(
+            onPressed: () {
+              controller.toggleCopyMove();
+            },
+            child: Obx(() => Text(
+                  'Always move ${controller.alwaysMove.value ? "✔" : "✘"}',
+                )),
+          ),
+        ),
+
+            SizedBox(
+          height: MediaQuery.of(context).size.height * 0.1,
+          width: MediaQuery.of(context).size.width * 0.6,
+          child:  Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+           Text("${AppSettings.appVersion}\n${AppSettings.currPlatform}",
+           style: TextStyle(color: Colors.grey),),
+         ])
+        ),
       ],
     ));
   }

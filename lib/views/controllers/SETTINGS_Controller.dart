@@ -1,10 +1,10 @@
-
+import 'package:file_nest/config.dart';
 import 'package:file_nest/model/Logger.dart';
+import 'package:file_nest/model/log_level.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:global_configuration/global_configuration.dart';
 
 class SETTINGS_Controller extends GetxController {
   RxInt dropdownItemsSwell = 0.obs;
@@ -13,9 +13,8 @@ class SETTINGS_Controller extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    GlobalConfiguration().loadFromAsset("app_settings");
-    alwaysMove.value = GlobalConfiguration().getValue("alwaysMove");
-    isDarkMode.value = GlobalConfiguration().getValue("darkTheme");
+    alwaysMove.value = AppSettings.getSettingsByKey("move") as bool;
+    isDarkMode.value = AppSettings.getSettingsByKey("theme") as bool;
   }
 
   void clearDataBase() {
@@ -34,27 +33,30 @@ class SETTINGS_Controller extends GetxController {
     ).logToFile();
   }
 
-  void toggleColorMode(bool selValue) {
-    isDarkMode.value =  selValue;
-    GlobalConfiguration().updateValue("darkTheme", selValue);
+  void toggleColorMode() {
+    var _temp = !isDarkMode.value;
+    isDarkMode.value = _temp;
+    AppSettings.setSettingsByKey("theme", null);
     AppLogger(
       message: "set color Theme to  $isDarkMode",
       logLevel: LogLevel.info,
     ).logToFile(showSnackbar: false);
+
     update();
+    Navigator.of(Get.context!).pop();
   }
 
-  void setDefaultCopyMove(bool selValue) {
-    GlobalConfiguration().updateValue("alwaysMove", selValue);
-    alwaysMove.value = selValue;
+  void toggleCopyMove() {
+    var _temp = !alwaysMove.value;
+    AppSettings.setSettingsByKey("move", null);
+    alwaysMove.value = _temp;
     AppLogger(
-      message: "changed default mode to $selValue",
+      message: "changed default mode to $_temp",
       logLevel: LogLevel.info,
     ).logToFile(showSnackbar: false);
     update();
+    Navigator.of(Get.context!).pop();
   }
 
-  void showAboutPage(BuildContext context) {
-    showAboutPage(context);
-  }
+  void showAboutPage(BuildContext context) => showAboutPage(context);
 }
