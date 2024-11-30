@@ -30,8 +30,6 @@ dependencies:
   flutter_toggle_tab: ^1.4.1
   fluentui_system_icons: ^1.1.236
   intl: ^0.20.0
-  global_configuration: ^2.0.0
-  open_dir: ^0.0.1+6
   material_dialogs: ^1.1.5
 
 
