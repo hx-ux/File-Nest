@@ -3,11 +3,15 @@ import 'dart:io';
 class UrlLaunchOptions {
   static void openFileExplorer(String path) async {
     if (Platform.isWindows) {
-      print("opening file explorer");
       Process.run(
         "explorer",
         [path],
         workingDirectory: path,
+      );
+    } else if (Platform.isLinux) {
+      Process.run(
+        "xdg-open",
+        [path],
       );
     }
   }
@@ -16,6 +20,11 @@ class UrlLaunchOptions {
     if (Platform.isWindows) {
       Process.run(
         "explorer",
+        [url],
+      );
+    } else if (Platform.isLinux) {
+      Process.run(
+        "xdg-open",
         [url],
       );
     }
