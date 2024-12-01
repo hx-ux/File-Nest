@@ -12,8 +12,7 @@ Easily cleanup your desktop , by copying files to folders using a GUI. <br>
 
 #### Platform Support:
 
-  >  Currently, File Nest has only been tested on Windows. <br> 
-  > Support for Linux is coming soon! 
+  > Works on Windows and Linux <br> 
 
 ## Features
 
