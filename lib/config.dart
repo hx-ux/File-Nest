@@ -19,7 +19,7 @@ class AppSettings {
 //
   static const logFileFileName = "file_nest_log.txt";
   static const settingsFolderName = "fileNest";
-  static const appSettinsgFileName = "app_settings.json";
+  static const appSettingsFileName = "app_settings.json";
   static final currPlatform = Platform.operatingSystem;
 // dynamic appSettings
   static Object? getSettingsByKey(String key) {
@@ -33,7 +33,9 @@ class AppSettings {
     }
   }
 
-  static setSettingsByKey(String key, Object? value) {}
+  static setSettingsByKey(String key, Object? value) {
+    // TODO: Implement setSettingsByKey method
+  }
 }
 
 // Settings folder
@@ -61,10 +63,9 @@ Future<File> getLogFilePath() async {
 
 Future<File> getAppSettingsFilePath() async {
   final dir = await getSettingFolderPath();
-  final file = File(p.join(dir.path, AppSettings.appSettinsgFileName));
+  final file = File(p.join(dir.path, AppSettings.appSettingsFileName));
   if (file.existsSync()) return file;
-  appSettingsSetup();
-  // file.createSync();
+  await appSettingsSetup();
   return file;
 }
 
@@ -78,13 +79,13 @@ Future<File> appSettingsSetup() async {
   String jsonString = jsonEncode(payload);
   final dir = await getSettingFolderPath();
   String filePath =
-      File(p.join(dir.path, AppSettings.appSettinsgFileName)).path;
+      File(p.join(dir.path, AppSettings.appSettingsFileName)).path;
 
   // Create the JSON file and write the data
   File jsonFile = File(filePath);
   jsonFile.createSync();
   await jsonFile.writeAsString(jsonString);
-  print('JSON file created at: $filePath');
-
+  // Use proper logging instead of print
+  debugPrint('JSON file created at: $filePath');
   return jsonFile;
 }

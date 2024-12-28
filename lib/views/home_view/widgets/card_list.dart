@@ -22,15 +22,22 @@ class ArtefactListEntry extends StatefulWidget {
     required this.DropTragetIdentifier,
   });
 
-  var showInfo = false.obs;
+  final showInfo = false.obs;
   @override
   State<ArtefactListEntry> createState() => _ArtefactListEntryState();
 }
 
 class _ArtefactListEntryState extends State<ArtefactListEntry> {
+  late final HOME_Controller controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<HOME_Controller>();
+  }
+
   @override
   Widget build(BuildContext context) {
-    HOME_Controller controller = Get.find<HOME_Controller>();
 
     return DropTarget(
       onDragDone: (detail) {

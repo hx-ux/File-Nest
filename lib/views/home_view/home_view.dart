@@ -33,7 +33,7 @@ class Home_Page extends GetView<HOME_Controller> {
             ? const Expanded(child: Center(child: Text("add folders")))
             : Expanded(
                 child: ListView(
-                  shrinkWrap: true, // use it
+                  shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
                   children: [
                     Obx(() => ListView.builder(

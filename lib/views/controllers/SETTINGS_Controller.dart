@@ -36,19 +36,21 @@ class SETTINGS_Controller extends GetxController {
   void toggleColorMode() {
     var _temp = !isDarkMode.value;
     isDarkMode.value = _temp;
-    AppSettings.setSettingsByKey("theme", null);
+    AppSettings.setSettingsByKey("theme", _temp);
     AppLogger(
       message: "set color Theme to  $isDarkMode",
       logLevel: LogLevel.info,
     ).logToFile(showSnackbar: false);
 
     update();
-    Navigator.of(Get.context!).pop();
+    if (Get.context != null) {
+      Navigator.of(Get.context!).pop();
+    }
   }
 
   void toggleCopyMove() {
     var _temp = !alwaysMove.value;
-    AppSettings.setSettingsByKey("move", null);
+    AppSettings.setSettingsByKey("move", _temp);
     alwaysMove.value = _temp;
     AppLogger(
       message: "changed default mode to $_temp",

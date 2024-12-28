@@ -18,12 +18,11 @@ Future<void> main() async {
   await windowManager.ensureInitialized();
   await DBApdater.init();
 
-  initializeDateFormatting('de_DE', null);
+  await initializeDateFormatting('de_DE', null);
   WindowOptions windowOptions = const WindowOptions(
     minimumSize: AppSettings.minSize,
     size: AppSettings.startSize,
     maximumSize: AppSettings.maxSize,
-    center: false,
     skipTaskbar: false,
     titleBarStyle: TitleBarStyle.normal,
     windowButtonVisibility: true,

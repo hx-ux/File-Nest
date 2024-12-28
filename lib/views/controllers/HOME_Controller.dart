@@ -38,13 +38,23 @@ class HOME_Controller extends GetxController {
   //
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
     loadAllArtefact();
   }
 
-  void loadAllArtefact() async => DBApdater.getAllTargetArtefacts()
-      .then((value) => allArtefacts.value = value);
+  void loadAllArtefact() async {
+    try {
+      var value = await DBApdater.getAllTargetArtefacts();
+      allArtefacts.value = value;
+    } catch (e) {
+      AppLogger(
+        logLevel: LogLevel.error,
+        message: "Failed to load artefacts",
+        fileName: "$e",
+      ).logToFile();
+    }
+  }
 
   Future<void> addArtefact() async {
     try {
@@ -152,14 +162,24 @@ class HOME_Controller extends GetxController {
           p.join(destinationPath, p.basename(originalFile.path));
 
       CopyDialog(p.basename(originalFile.path));
-      await FileCopy.copyFile(
-        originalFile,
-        destinationFullPath,
-        onChangeProgress: (progress) {
-          transferProgress.value = progress.progress;
-          print(progress.progress);
-        },
-      );
+      try {
+        await FileCopy.copyFile(
+          originalFile,
+          destinationFullPath,
+          onChangeProgress: (progress) {
+            transferProgress.value = progress.progress;
+            print(progress.progress);
+          },
+        );
+      } catch (e) {
+        AppLogger(
+          logLevel: LogLevel.error,
+          message: "Error during file copy: $e",
+          fileName: originalFile.path,
+        ).logToFile();
+        Navigator.pop(Get.context!);
+        return LogLevel.error;
+      }
       AppLogger(
         logLevel: LogLevel.copy,
         message: "Copied file",

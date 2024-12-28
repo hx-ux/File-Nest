@@ -16,7 +16,7 @@ class DBApdater {
     final dir = await getSettingFolderPath();
     isar = await Isar.open(
       [TargetArtefactSchema],
-      inspector: true,
+      inspector: false,
       directory: dir.path,
       name: "file_nest",
     );

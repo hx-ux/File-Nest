@@ -13,6 +13,8 @@ class UrlLaunchOptions {
         "xdg-open",
         [path],
       );
+    } else if (Platform.isMacOS) {
+      // no suppport for macos yet
     }
   }
 
@@ -27,6 +29,9 @@ class UrlLaunchOptions {
         "xdg-open",
         [url],
       );
+    } else if (Platform.isMacOS) {
+      // no suppport for macos yet
+
     }
   }
 }
