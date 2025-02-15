@@ -3,19 +3,19 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class LOG_Controller extends GetxController {
-  var logList = <AppLogger>[].obs; // logList.
+  var logList = <AppLogger>[].obs;
 
   @override
   void onInit() {
-    // TODO: implement onInit
     loadContext();
     super.onInit();
   }
 
   void loadContext() async {
-    await AppLogger().readLog().then((x)=> logList.value = x);
-    for (var element in logList) {
-      print(element.message);
+    var logs = await AppLogger().readLog();
+    logList.value = logs;
+    for (var element in logs) {
+      debugPrint(element.message);
     }
   }
 }
