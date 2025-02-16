@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:async/async.dart';
@@ -9,15 +10,9 @@ import 'package:file_nest/model/Logger.dart';
 import 'package:file_nest/model/TargetArtefact.dart';
 import 'package:file_nest/model/db.dart';
 import 'package:file_nest/model/log_level.dart';
-import 'package:file_nest/services/Dialogs.dart';
-import 'package:file_nest/views/home_view/home_view.dart';
-
+import 'package:file_nest/routes/app_pages.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:material_dialogs/dialogs.dart';
-import 'package:material_dialogs/shared/types.dart';
-import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
 
@@ -29,26 +24,27 @@ enum CopyOrMove {
 class HOME_Controller extends GetxController {
   RxList<TargetArtefact> allArtefacts = <TargetArtefact>[].obs;
 
-  ThemeData themeData = appThemeDataDark;
-
   var copyOrMove = CopyOrMove.Copy.obs;
   TargetArtefact? selectedNode;
   RxBool isOverNode = false.obs;
   RxInt dropTragetIdentifier = 0.obs;
   RxDouble transferProgress = 0.0.obs;
+
   RxString currentProcressedFile = "".obs;
   RxBool currentFileProcessFinished = false.obs;
 
   CancelableOperation? _copyOperation;
   RxBool copyOperationFinished = false.obs;
 
+  StreamController<bool> streamController = StreamController<bool>();
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    loadAllArtefact();
+    await loadAllArtefact();
   }
 
-  void loadAllArtefact() async {
+  Future<void> loadAllArtefact() async {
     try {
       var value = await DBApdater.getAllTargetArtefacts();
       allArtefacts.value = value;
@@ -89,7 +85,7 @@ class HOME_Controller extends GetxController {
 
   void deleteArtefact(TargetArtefact id) async {
     try {
-      DBApdater.deleteArteFact(id.id);
+      await DBApdater.deleteArteFact(id.id);
       allArtefacts.removeWhere((element) => element.id == id.id);
       AppLogger(
         logLevel: LogLevel.info,
@@ -106,6 +102,7 @@ class HOME_Controller extends GetxController {
   }
 
   void fileTransferOperation(List<String> inputFiles, String targetPath) async {
+    copyOperationFinished.value = false;
     try {
       if (copyOrMove.value == CopyOrMove.Copy) {
         if (inputFiles.isEmpty) throw "No files selected";
@@ -116,21 +113,15 @@ class HOME_Controller extends GetxController {
             .toList();
 
         if (toCopyFiles.isEmpty) throw "No files to copy";
-        CopyDialog(p.basename(toCopyFiles[0].path));
-
+        Get.toNamed(Routes.FileOperation);
         _copyOperation = CancelableOperation.fromFuture(
           copyFiles(toCopyFiles, targetPath),
           onCancel: () => {},
-        ).then((_) {
+        ).then((_) async {
           copyOperationFinished.value = true;
+          await Future.delayed(Duration(seconds: 1));
+          Get.toNamed(Routes.HOME);
         });
-
-        // if (!_copyOperation!.isCanceled) {
-        //   copyOperationFinished.value = true;
-        // }
-
-        // Get.to(() => Home_Page());
-        // Navigator.pop(Get.context!);
       }
     } catch (e) {
       AppLogger(
@@ -139,28 +130,6 @@ class HOME_Controller extends GetxController {
         fileName: "",
       ).logToFile();
     }
-  }
-
-  CopyDialog(String fileName) {
-   
-      Dialogs.bottomMaterialDialog(
-          title: 'Copy file',
-          msg: p.basename((fileName)),
-          context: Get.context!,
-          customView: FileTransferProgressBar(transferProgress, false),
-          customViewPosition: CustomViewPosition.BEFORE_ACTION,
-          actions: [
-            IconsButton(
-              onPressed: () {
-                Navigator.pop(Get.context!);
-              },
-              text: 'Abort',
-              iconData: Icons.delete,
-              color: Colors.red,
-              textStyle: TextStyle(color: Colors.white),
-              iconColor: Colors.white,
-            ),
-          ]);
   }
 
   Future<void> copyFiles(
@@ -173,7 +142,7 @@ class HOME_Controller extends GetxController {
       final p = await copyFileOperation(originalFile[i], destinationPath);
       copyResults.add(p);
     }
-    currentFileProcessFinished.value = true;
+    update();
   }
 
   Future<bool> copyFileOperation(File toCopyFile, String targetPath) async {
@@ -202,11 +171,9 @@ class HOME_Controller extends GetxController {
       message: "Copied file",
       fileName: toCopyFile.path,
     ).logToFile(showSnackbar: false);
-    Navigator.pop(Get.context!);
     return true;
   }
 }
 
 
-  // void changeMode(int idx) =>
-  //     copyOrMove.value = idx == 0 ? CopyOrMove.Copy : CopyOrMove.Move;
+

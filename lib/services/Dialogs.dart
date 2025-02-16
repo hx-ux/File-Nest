@@ -30,17 +30,3 @@ _DialogSimpleConfirm(LogLevel logLevel, String message, String? fileName) {
       ]);
 }
 
-FileTransferProgressBar(var transferProgress, bool isIfnihes) {
-  return Obx(
-    () => Column(
-      children: [
-        LinearProgressIndicator(value: (transferProgress.value)),
-        Text(
-          "${((transferProgress.value * 100).roundToDouble()).clamp(0, 100).toInt()}%",
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.black, fontSize: 15),
-        ),
-      ],
-    ),
-  );
-}
