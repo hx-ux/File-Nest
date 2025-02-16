@@ -1,7 +1,7 @@
 import 'dart:io';
 
 class UrlLaunchOptions {
-  static void openFileExplorer(String path) async {
+  static void openInFileExplorer(String path) async {
     if (Platform.isWindows) {
       Process.run(
         "explorer",

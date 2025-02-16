@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:file_nest/config.dart';
 import 'package:file_nest/model/log_level.dart';
 import 'package:file_nest/services/Dialogs.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -26,16 +25,17 @@ class AppLogger {
     final file = await logFilePath();
     final log = file.openWrite(mode: FileMode.write);
     log.write("");
+    await log.close();
   }
 
   AppLogger({
     this.logLevel = LogLevel.copy,
-    this.message = "",
+    this.message = "No data provided",
     this.fileName = "none",
     this.destination = "none",
   });
 
-  void logToFile({showSnackbar = true}) {
+  void logToFile({bool showSnackbar = true}) {
     _writeLog(logLevel, message, fileName, destination);
     if (showSnackbar) {
       showSnackbarInformation(
@@ -80,12 +80,12 @@ class AppLogger {
         appLogger.color = LogLevel.values.byName(parts[0]).attentioncolor;
         return appLogger;
       } catch (e) {
-        return new AppLogger();
+        return  AppLogger();
       }
     }
   }
 
   void showSnackbarInformation(String msg, String? fileName,
           {required infoType}) =>
-      DialogSimpleConfirm(infoType, msg, fileName, showDuration: 1000);
+      simpleConfirmDialog(infoType, msg, fileName, showDuration: 1000);
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_nest/core/theme/colors.style.dart';
 import 'package:file_nest/core/theme/fonts.style.dart';
+import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/model/TargetArtefact.dart';
 import 'package:file_nest/views/controllers/HOME_Controller.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -38,7 +39,6 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
 
   @override
   Widget build(BuildContext context) {
-
     return DropTarget(
       onDragDone: (detail) {
         controller.selectedNode = TargetArtefact("", "");
@@ -102,7 +102,8 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
                     if (!widget.showInfo.value)
                       IconButton(
                         onPressed: () {
-                          controller.openFileExplorer((widget.artefact.url));
+                          UrlLaunchOptions.openInFileExplorer(
+                              (widget.artefact.url));
                         },
                         icon:
                             const Icon(FluentIcons.document_folder_24_regular),
