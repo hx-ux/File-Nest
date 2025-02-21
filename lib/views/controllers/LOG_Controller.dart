@@ -14,8 +14,6 @@ class LOG_Controller extends GetxController {
   void loadContext() async {
     var logs = await AppLogger().readLog();
     logList.value = logs;
-    for (var element in logs) {
-      debugPrint(element.message);
-    }
   }
+
 }

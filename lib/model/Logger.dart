@@ -7,17 +7,16 @@ import 'package:intl/intl.dart';
 
 class AppLogger {
   LogLevel logLevel;
-  String message;
-  String fileName;
-  String destination;
+  String? message;
+  String? fileName;
+  String? destination;
   DateTime? timestamp;
   IconData? icon;
   Color? color;
 
-  // DateFormat DateTimeFormat() => DateFormat('dd/MM/yy HH:mm:ss');
+  static var timeStampFromUnix = DateFormat('dd.MM.yyyy HH:mm:ss', 'de_DE');
 
-  static var timeStampFormatter = DateFormat('dd.MM.yyyy HH:mm:ss', 'de_DE');
-  String getTimeStampAsString() => timeStampFormatter.format(DateTime.now());
+  String timeStamptoUnix() => DateTime.now().millisecondsSinceEpoch.toString();
 
   static Future<File> logFilePath() async => getLogFilePath();
 
@@ -39,17 +38,17 @@ class AppLogger {
     _writeLog(logLevel, message, fileName, destination);
     if (showSnackbar) {
       showSnackbarInformation(
-          message, fileName != "none" ? fileName : destination,
+          message??"unknow", fileName ?? "unknowm",
           infoType: logLevel);
     }
   }
 
-  void _writeLog(LogLevel logtype, String message, String filename,
-      String destination) async {
+  void _writeLog(LogLevel logtype, String? message, String? filename,
+      String? destination) async {
     final file = await logFilePath();
     String logType = logtype.name;
     final log = file.openWrite(mode: FileMode.append);
-    String timeStamp = getTimeStampAsString();
+    String timeStamp = timeStamptoUnix();
 
     log.writeln('$logType| $timeStamp | $message | $filename | $destination');
     log.close();
@@ -72,15 +71,16 @@ class AppLogger {
         var parts = message.split('|');
         AppLogger appLogger = AppLogger();
         appLogger.logLevel = LogLevel.values.byName(parts[0]);
-        // appLogger.timestamp = timeStampFormatter.parse(parts[1]).toLocal();
+        int unixTimeStamp = int.tryParse(parts[1]) ?? 0;
+        appLogger.timestamp = DateTime.fromMillisecondsSinceEpoch(unixTimeStamp);
         appLogger.message = parts[2];
         appLogger.fileName = parts[3];
         appLogger.destination = parts[4];
-        appLogger.icon = LogLevel.values.byName(parts[0]).icon;
+        appLogger.icon = LogLevel.values.byName(parts[0]).icon ;
         appLogger.color = LogLevel.values.byName(parts[0]).attentioncolor;
         return appLogger;
       } catch (e) {
-        return  AppLogger();
+        return AppLogger();
       }
     }
   }
