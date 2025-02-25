@@ -14,14 +14,14 @@ class AppSettings {
   static const String appVersion = "0.0.1_alpha";
   static const bool isStable = false;
   //
-  static const minSize = Size(400, 400);
-  static const startSize = Size(400, 800);
-  static const maxSize = Size(800, 800);
+  static const Size minSize = Size(400, 400);
+  static const Size startSize = Size(400, 800);
+  static const Size maxSize = Size(800, 800);
 //
-  static const logFileFileName = "file_nest_log.txt";
+  static const logFileName = "file_nest_log.txt";
   static const settingsFolderName = "fileNest";
   static const appSettingsFileName = "app_settings.yaml";
-  static final currPlatform = Platform.operatingSystem;
+  static final String currPlatform = Platform.operatingSystem;
 }
 
 // Settings folder
@@ -41,9 +41,9 @@ Future<Directory> getSettingFolderPath() async {
 
 Future<File> getLogFilePath() async {
   final dir = await getSettingFolderPath();
-  final file = File(p.join(dir.path, AppSettings.logFileFileName));
-  if (file.existsSync()) return file;
-  file.createSync();
+  final file = File(p.join(dir.path, AppSettings.logFileName));
+  if (await file.exists()) return file;
+  await file.create();
   return file;
 }
 
@@ -70,7 +70,7 @@ Future<Map<String, int>> loadSettings() async {
 
   assert(settings.validInt('themeMode'), 'Should be a int');
 
-  final themeMode = settings['themeMode'] as int ;
+  final themeMode = settings['themeMode']?.toInt() ?? 0;
  
 return {
     'themeMode': themeMode,
