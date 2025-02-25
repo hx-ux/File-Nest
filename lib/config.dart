@@ -6,6 +6,7 @@ import 'package:file_nest/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:settings_yaml/settings_yaml.dart';
 
 class AppSettings {
   //
@@ -13,29 +14,14 @@ class AppSettings {
   static const String appVersion = "0.0.1_alpha";
   static const bool isStable = false;
   //
-  static const minSize = Size(400, 400);
-  static const startSize = Size(400, 800);
-  static const maxSize = Size(800, 800);
+  static const Size minSize = Size(400, 400);
+  static const Size startSize = Size(400, 800);
+  static const Size maxSize = Size(800, 800);
 //
-  static const logFileFileName = "file_nest_log.txt";
+  static const logFileName = "file_nest_log.txt";
   static const settingsFolderName = "fileNest";
-  static const appSettingsFileName = "app_settings.json";
-  static final currPlatform = Platform.operatingSystem;
-// dynamic appSettings
-  static Object? getSettingsByKey(String key) {
-    switch (key) {
-      case "theme":
-        return true;
-      case "move":
-        return false;
-      default:
-        return null;
-    }
-  }
-
-  static setSettingsByKey(String key, Object? value) {
-    // TODO: Implement setSettingsByKey method
-  }
+  static const appSettingsFileName = "app_settings.yaml";
+  static final String currPlatform = Platform.operatingSystem;
 }
 
 // Settings folder
@@ -55,9 +41,9 @@ Future<Directory> getSettingFolderPath() async {
 
 Future<File> getLogFilePath() async {
   final dir = await getSettingFolderPath();
-  final file = File(p.join(dir.path, AppSettings.logFileFileName));
-  if (file.existsSync()) return file;
-  file.createSync();
+  final file = File(p.join(dir.path, AppSettings.logFileName));
+  if (await file.exists()) return file;
+  await file.create();
   return file;
 }
 
@@ -65,27 +51,29 @@ Future<File> getAppSettingsFilePath() async {
   final dir = await getSettingFolderPath();
   final file = File(p.join(dir.path, AppSettings.appSettingsFileName));
   if (file.existsSync()) return file;
-  await appSettingsSetup();
+  file.createSync();
   return file;
 }
 
-Future<File> appSettingsSetup() async {
-  // Define the settings
-  final Map<String, dynamic> payload = {
-    "darkTheme": true,
-    "alwaysMove": true,
+Future<void> saveSettings(Map<String, int> values) async {
+  final file = await getAppSettingsFilePath();
+  final settings = SettingsYaml.load(pathToSettings: file.path);
+  for (var element in values.entries) {
+    settings[element.key] = element.value;
+  }
+  await settings.save();
+}
+
+Future<Map<String, int>> loadSettings() async {
+  final file = await getAppSettingsFilePath();
+  final settings = SettingsYaml.load(pathToSettings: file.path);
+
+  assert(settings.validInt('themeMode'), 'Should be a int');
+
+  final themeMode = settings['themeMode']?.toInt() ?? 0;
+ 
+return {
+    'themeMode': themeMode,
   };
 
-  String jsonString = jsonEncode(payload);
-  final dir = await getSettingFolderPath();
-  String filePath =
-      File(p.join(dir.path, AppSettings.appSettingsFileName)).path;
-
-  // Create the JSON file and write the data
-  File jsonFile = File(filePath);
-  jsonFile.createSync();
-  await jsonFile.writeAsString(jsonString);
-  // Use proper logging instead of print
-  debugPrint('JSON file created at: $filePath');
-  return jsonFile;
 }
