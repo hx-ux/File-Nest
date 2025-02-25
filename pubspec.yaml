@@ -33,6 +33,7 @@ dependencies:
   material_dialogs: ^1.1.5
   cancelable: ^4.2.1
   async: 2.11.0
+  settings_yaml: ^8.2.0
 
 dev_dependencies:
   flutter_test:
