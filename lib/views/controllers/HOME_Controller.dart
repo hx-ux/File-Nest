@@ -163,6 +163,7 @@ class HOME_Controller extends GetxController {
         logLevel: LogLevel.error,
         message: "Error during file copy: $e",
         fileName: toCopyFile.path,
+        destination: destinationFullPath,
       ).logToFile(showSnackbar: false);
       return false;
     }
@@ -170,6 +171,7 @@ class HOME_Controller extends GetxController {
       logLevel: LogLevel.copy,
       message: "Copied file",
       fileName: toCopyFile.path,
+      destination: destinationFullPath,
     ).logToFile(showSnackbar: false);
     return true;
   }
