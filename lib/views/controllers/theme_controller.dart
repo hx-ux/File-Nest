@@ -14,7 +14,7 @@ class ThemeController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    var p = await loadSettings();
-    currentTheme.value = p["themeMode"] == 1 ? true : false;
+    var themeFile = await loadSettings();
+    currentTheme.value = themeFile["themeMode"] == 1 ? true : false;
   }
 }

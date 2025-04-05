@@ -15,7 +15,7 @@ class File_Operation_Page extends GetView<HOME_Controller> {
         Obx(
           () => controller.currentFileProcessFinished.value
               ? SizedBox(
-                  child: const Text("Finsihed",
+                  child: const Text("Finished",
                       style: TextStyle(color: Colors.white, fontSize: 15)),
                 )
               : Column(

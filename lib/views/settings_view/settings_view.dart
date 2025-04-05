@@ -37,6 +37,12 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
           UrlLaunchOptions.launchInBrowser(
               "https://github.com/hx-ux/File-Nest");
         }),
+        settingsEntry(
+            FluentIcons.settings_16_filled, context, "Open settings folder",
+            () {
+          UrlLaunchOptions.openInFileExplorer(
+              getLogFilePath().then((value) => value.parent.path) as String);
+        }),
         Obx(
           () => settingsEntry(
             FluentIcons.dark_theme_20_filled,

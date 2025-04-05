@@ -70,10 +70,7 @@ Future<Map<String, int>> loadSettings() async {
 
   assert(settings.validInt('themeMode'), 'Should be a int');
 
-  final themeMode = settings['themeMode']?.toInt() ?? 0;
- 
-return {
-    'themeMode': themeMode,
+  return {
+    'themeMode': settings['themeMode']?.toInt() ?? 0,
   };
-
 }
