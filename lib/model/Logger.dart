@@ -29,7 +29,7 @@ class AppLogger {
 
   AppLogger({
     this.logLevel = LogLevel.copy,
-    this.message = "No data provided",
+    this.message = "none",
     this.fileName = "none",
     this.destination = "none",
   });
