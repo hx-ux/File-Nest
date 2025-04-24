@@ -39,9 +39,12 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
         }),
         settingsEntry(
             FluentIcons.settings_16_filled, context, "Open settings folder",
-            () {
-          UrlLaunchOptions.openInFileExplorer(
-              getLogFilePath().then((value) => value.parent.path) as String);
+            () async {
+          final path = await getLogFilePath();
+          if (path != null) {
+            UrlLaunchOptions.openInFileExplorer(path.parent.path);
+            return;
+          }
         }),
         Obx(
           () => settingsEntry(

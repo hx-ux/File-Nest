@@ -14,7 +14,10 @@ class UrlLaunchOptions {
         [path],
       );
     } else if (Platform.isMacOS) {
-      // no suppport for macos yet
+      Process.run(
+        "open",
+        [path],
+      );
     }
   }
 
@@ -30,8 +33,10 @@ class UrlLaunchOptions {
         [url],
       );
     } else if (Platform.isMacOS) {
-      // no suppport for macos yet
-
+      Process.run(
+        "open",
+        [url],
+      );
     }
   }
 }
