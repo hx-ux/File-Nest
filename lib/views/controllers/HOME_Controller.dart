@@ -66,13 +66,12 @@ class HOME_Controller extends GetxController {
             TargetArtefact(selectedDirectory, const Uuid().v1());
         allArtefacts.add(node);
         await DBApdater.addArtefact(node);
-
+        update();
         AppLogger(
           logLevel: LogLevel.info,
           message: "created folder",
           fileName: p.basename(selectedDirectory),
         ).logToFile(showSnackbar: false);
-        update();
       }
     } catch (e) {
       AppLogger(
@@ -176,6 +175,3 @@ class HOME_Controller extends GetxController {
     return true;
   }
 }
-
-
-
