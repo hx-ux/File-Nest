@@ -2,10 +2,10 @@ import 'package:file_nest/views/controllers/HOME_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// ignore: use_key_in_widget_constructors
-class File_Operation_Page extends GetView<HOME_Controller> {
+class FileTransferView extends GetView<HOME_Controller> {
   @override
-  final controller = Get.put(HOME_Controller());
+  // final controller = Get.put(HOME_Controller());
+  const FileTransferView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,13 @@ class File_Operation_Page extends GetView<HOME_Controller> {
                   ),
                   Text(
                     controller.currentProcressedFile.value.split('/').last,
-                    style: const TextStyle(color: Colors.white, fontSize: 15),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                   ),
                 ],
               ),
@@ -51,7 +57,7 @@ class ProgressBarPainter extends CustomPainter {
       ..color = progress >= 1.0 ? Colors.green : Colors.blue
       ..style = PaintingStyle.fill;
 
-    final rectHeight = size.height * progress;
+    final rectHeight = size.height * progress.clamp(0.0, 1.0);
     final rect =
         Rect.fromLTWH(0, size.height - rectHeight, size.width, rectHeight);
 
@@ -60,6 +66,6 @@ class ProgressBarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-      return true;
+    return true;
   }
 }
