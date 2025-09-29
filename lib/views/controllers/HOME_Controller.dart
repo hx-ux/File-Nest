@@ -3,9 +3,7 @@ import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:file_copy/file_copy.dart';
-import 'package:file_nest/core/theme/app_theme.dart';
 import 'package:file_nest/core/utilities/FileManagement.dart';
-import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/model/Logger.dart';
 import 'package:file_nest/model/TargetArtefact.dart';
 import 'package:file_nest/model/db.dart';
@@ -66,13 +64,12 @@ class HOME_Controller extends GetxController {
             TargetArtefact(selectedDirectory, const Uuid().v1());
         allArtefacts.add(node);
         await DBApdater.addArtefact(node);
-
+        update();
         AppLogger(
           logLevel: LogLevel.info,
           message: "created folder",
           fileName: p.basename(selectedDirectory),
         ).logToFile(showSnackbar: false);
-        update();
       }
     } catch (e) {
       AppLogger(
@@ -113,6 +110,7 @@ class HOME_Controller extends GetxController {
             .toList();
 
         if (toCopyFiles.isEmpty) throw "No files to copy";
+
         Get.toNamed(Routes.FileOperation);
         _copyOperation = CancelableOperation.fromFuture(
           copyFiles(toCopyFiles, targetPath),
@@ -155,7 +153,6 @@ class HOME_Controller extends GetxController {
         destinationFullPath,
         onChangeProgress: (progress) {
           transferProgress.value = progress.progress;
-          print(progress.progress);
         },
       );
     } catch (e) {
@@ -176,6 +173,3 @@ class HOME_Controller extends GetxController {
     return true;
   }
 }
-
-
-

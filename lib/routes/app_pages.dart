@@ -13,6 +13,6 @@ abstract class AppPages {
     ),
     GetPage(name: Routes.SETTINGS, page: () => SettingsPage()),
     GetPage(name: Routes.LOG, page: () => LogsPage()),
-    GetPage(name: Routes.FileOperation, page: () => File_Operation_Page()),
+    GetPage(name: Routes.FileOperation, page: () => FileTransferView()),
   ];
 }
