@@ -1,5 +1,5 @@
 import 'package:file_nest/views/controllers/HOME_Controller.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:file_nest/core/theme/icons.style.dart';
 import 'package:flutter/material.dart';
 
 class AddBtn extends StatelessWidget {
@@ -8,15 +8,16 @@ class AddBtn extends StatelessWidget {
     required this.controller,
   });
 
-  final HomeController controller;
+  final HOME_Controller controller;
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: () async {
-        controller.addArtefact();
-      },
-      child: const Icon(FluentIcons.add_24_regular),
-    );
+        onPressed: () async {
+          controller.addArtefact();
+          
+        },
+        child: const Icon(AppIcons.add),
+      );
   }
 }

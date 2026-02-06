@@ -1,40 +1,41 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:file_nest/core/theme/colors.style.dart';
+import 'package:file_nest/core/theme/icons.style.dart';
 import 'package:flutter/material.dart';
 
 enum LogLevel {
   debug(
-    attentioncolor: Colors.blue,
-    icon: FluentIcons.bug_24_regular,
+    attentioncolor: IColors.primary,
+    icon: AppIcons.bug,
     description: "Debug",
   ),
   info(
-    attentioncolor: Colors.green,
-    icon: FluentIcons.info_24_regular,
+    attentioncolor: IColors.successColor,
+    icon: AppIcons.info,
     description: "Success",
   ),
   warning(
-    attentioncolor: Colors.orange,
-    icon: FluentIcons.text_bullet_list_24_regular,
+    attentioncolor: Color(0xFFF59E0B),
+    icon: AppIcons.list,
     description: "warning",
   ),
   error(
-    attentioncolor: Colors.red,
-    icon: FluentIcons.text_bullet_list_24_regular,
+    attentioncolor: IColors.errorColor,
+    icon: AppIcons.list,
     description: "Error",
   ),
   copy(
-    attentioncolor: Colors.green,
-    icon: FluentIcons.copy_arrow_right_24_regular,
+    attentioncolor: IColors.successColor,
+    icon: AppIcons.copyArrowRight,
     description: "Success",
   ),
   move(
-    attentioncolor: Colors.green,
-    icon: FluentIcons.arrow_move_24_regular,
+    attentioncolor: IColors.successColor,
+    icon: AppIcons.moveArrow,
     description: "Success",
   ),
   duplicate(
-    attentioncolor: Colors.grey,
-    icon: FluentIcons.bug_24_regular,
+    attentioncolor: Color(0xFF94A3B8),
+    icon: AppIcons.bug,
     description: "Duplicate",
   );
 

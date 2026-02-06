@@ -1,15 +1,13 @@
 import 'package:desktop_drop/desktop_drop.dart';
-import 'package:file_nest/core/theme/colors.style.dart';
-import 'package:file_nest/core/theme/fonts.style.dart';
+import 'package:file_nest/core/theme/icons.style.dart';
 import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/model/TargetArtefact.dart';
 import 'package:file_nest/views/controllers/HOME_Controller.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ArtefactListEntry extends StatefulWidget {
-  final HomeController controller;
+  final HOME_Controller controller;
   final TargetArtefact artefact;
   final DropTragetIdentifier;
   ArtefactListEntry({
@@ -25,12 +23,12 @@ class ArtefactListEntry extends StatefulWidget {
 }
 
 class _ArtefactListEntryState extends State<ArtefactListEntry> {
-  late final HomeController controller;
+  late final HOME_Controller controller;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.find<HomeController>();
+    controller = Get.find<HOME_Controller>();
   }
 
   @override
@@ -38,7 +36,7 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
     return DropTarget(
       onDragDone: (detail) {
         controller.selectedNode = TargetArtefact("", "");
-        controller.isOverNode.value = false;
+        controller.isOverNode = false.obs;
 
         List<String> files = [];
         detail.files.forEach((file) => files.add(file.path));
@@ -53,21 +51,23 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
         controller.selectedNode = TargetArtefact("", "");
         controller.isOverNode.value = false;
       },
-      child: entryCard(context, controller),
+      child: EntryCard(context, controller),
     );
   }
 
-  Obx entryCard(BuildContext context, HomeController controller) {
+  Obx EntryCard(BuildContext context, HOME_Controller controller) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
     return Obx(() => Container(
-          height: MediaQuery.of(context).size.height * 0.1,
-          width: MediaQuery.of(context).size.width * 0.6,
+          constraints: const BoxConstraints(minHeight: 80),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: controller.isOverNode.value &&
                     controller.dropTragetIdentifier.value ==
                         widget.DropTragetIdentifier
-                ? IColors.attentionColor
-                : Colors.white,
+                ? colorScheme.primaryContainer
+                : colorScheme.surface,
+            border: Border.all(color: colorScheme.outline),
           ),
           child: controller.isOverNode.value &&
                   controller.dropTragetIdentifier.value ==
@@ -77,23 +77,21 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
                   children: [
                     Text(
                       "Copy files to ${widget.artefact.name}",
-                      style: const TextStyle(
-                        color: IColors.iconsColorArteFacts,
-                        fontFamily: IFont.primaryFontBold,
-                        fontSize: 15,
+                      style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onPrimaryContainer,
                       ),
                     )
                   ],
                 )
               : Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start, // add space
                   children: [
                     IconButton(
                       onPressed: () {
                         widget.showInfo.value = !widget.showInfo.value;
                       },
-                      icon: const Icon(FluentIcons.info_24_regular),
-                      color: IColors.iconsColorArteFacts,
+                      icon: const Icon(AppIcons.info),
+                      color: colorScheme.onSurface,
                     ),
                     if (!widget.showInfo.value)
                       IconButton(
@@ -101,30 +99,26 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
                           UrlLaunchOptions.openInFileExplorer(
                               (widget.artefact.url));
                         },
-                        icon:
-                            const Icon(FluentIcons.document_folder_24_regular),
-                        color: IColors.iconsColorArteFacts,
+                        icon: const Icon(AppIcons.folder),
+                        color: colorScheme.onSurface,
                       ),
                     if (!widget.showInfo.value)
                       IconButton(
                         onPressed: () {
                           controller.deleteArtefact(widget.artefact);
                         },
-                        icon: const Icon(FluentIcons.bin_recycle_24_regular),
-                        color: IColors.iconsColorArteFacts,
+                        icon: const Icon(AppIcons.delete),
+                        color: colorScheme.onSurface,
                       ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.05),
+                    const SizedBox(width: 16),
                     Center(
                       child: Text(
                         widget.showInfo.value
                             ? widget.artefact.url.toString()
                             : widget.artefact.name.toString(),
-                        style: const TextStyle(
-                          color: IColors.iconsColorArteFacts,
-                          fontFamily: IFont.primaryFontBold,
-                          fontSize: 15,
+                        style: textTheme.titleMedium?.copyWith(
+                          color: colorScheme.onSurface,
                         ),
-                        softWrap: true,
                       ),
                     ),
                   ],

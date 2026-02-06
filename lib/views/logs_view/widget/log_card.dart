@@ -1,6 +1,6 @@
 import 'package:file_nest/model/Logger.dart';
 import 'package:file_nest/model/log_level.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:file_nest/core/theme/icons.style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,30 +10,39 @@ class LoggerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: EdgeInsets.fromLTRB(
           context.width * 0.01, context.height * 0.01, context.width * 0.01, 0),
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: logger.color ?? Colors.blue),
+            color: logger.color ?? colorScheme.primary),
         child: Row(
           children: [
-            Icon(logger.icon ?? FluentIcons.info_24_regular),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(logger.icon ?? AppIcons.info,
+                  color: colorScheme.onPrimary),
+            ),
             SizedBox(width: 8.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 singleLine(context, logger.message, isHeadline: true),
-                if(logger.logLevel == LogLevel.copy || logger.logLevel == LogLevel.move) singleLine(context, logger.fileName.toString()),
-                if(logger.logLevel == LogLevel.copy || logger.logLevel == LogLevel.move)
+                if (logger.logLevel == LogLevel.copy ||
+                    logger.logLevel == LogLevel.move)
+                  singleLine(context, logger.fileName.toString()),
+                if (logger.logLevel == LogLevel.copy ||
+                    logger.logLevel == LogLevel.move)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                  Icon(FluentIcons.arrow_down_12_filled, color: Colors.white, size: 15),
+                  Icon(AppIcons.arrowDown, color: Colors.white, size: 15),
                   ],
                 ),
-                if(logger.logLevel == LogLevel.copy || logger.logLevel == LogLevel.move)
+                if (logger.logLevel == LogLevel.copy ||
+                    logger.logLevel == LogLevel.move)
                 singleLine(context, logger.destination.toString()),
                 singleLine(context, logger.timestamp.toString()),
               ],
@@ -54,7 +63,7 @@ class LoggerCard extends StatelessWidget {
         overflow: TextOverflow.fade,
         softWrap: false,
         style: TextStyle(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onPrimary,
             fontWeight: isHeadline ? FontWeight.bold : FontWeight.normal),
       ),
     );

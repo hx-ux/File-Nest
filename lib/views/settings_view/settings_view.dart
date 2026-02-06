@@ -1,94 +1,129 @@
 import 'package:file_nest/config.dart';
+import 'package:file_nest/core/theme/icons.style.dart';
+import 'package:file_nest/core/widgets/responsive_page.dart';
 import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/views/controllers/SETTINGS_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SettingsPage extends GetView<SettingsController> {
+class SettingsPage extends GetView<SETTINGS_Controller> {
   SettingsPage({super.key});
   @override
-  final controller = Get.put(SettingsController());
+  final controller = Get.put(SETTINGS_Controller());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Navbar(
-            subpage: true,
-          ),
-        ),
-        settingsEntry(FluentIcons.delete_12_regular, context, "Clear logs", () {
-          controller.clearLogs();
-        }),
-        settingsEntry(FluentIcons.delete_12_regular, context, "Clear database",
-            () {
-          controller.clearDataBase();
-        }),
-        settingsEntry(
-            FluentIcons.book_arrow_clockwise_20_regular, context, "Github", () {
-          UrlLaunchOptions.launchInBrowser(
-              "https://github.com/hx-ux/File-Nest");
-        }),
-        settingsEntry(
-            FluentIcons.settings_16_filled, context, "Open settings folder",
-            () async {
-          final path = await getLogFilePath();
-          UrlLaunchOptions.openInFileExplorer(path.parent.path);
-          return;
-        }),
-        Obx(
-          () => settingsEntry(
-            FluentIcons.dark_theme_20_filled,
-            context,
-            controller.isDarkMode.value ? "Dark Mode" : "Light Mode",
-            () {
-              controller.toggleColorMode();
-            },
-          ),
-        ),
-        settingsEntry(
-          FluentIcons.info_12_filled,
-          context,
-          "${AppSettings.appVersion} ${AppSettings.currPlatform}",
-          () {},
-        ),
-      ],
-    ));
-  }
-
-  SizedBox settingsEntry(IconData leading, BuildContext context, String desc,
-      void Function() action,
-      {bool hasInfoIcon = false, bool infoIconState = false}) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.1,
-      width: MediaQuery.of(context).size.width * 0.6,
-      child: Row(
+        body: ResponsivePage(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Icon(
-            leading,
+          const Navbar(subpage: true),
+          const SizedBox(height: 12),
+          Text(
+            "Settings",
+            style: Theme.of(context).textTheme.displaySmall,
           ),
-          ElevatedButton(
-            onPressed: () => action(),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(desc),
+          const SizedBox(height: 12),
+          Expanded(
+            child: ListView(
+              children: [
+                Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(AppIcons.theme),
+                        title: const Text("Theme"),
+                        subtitle: const Text("Select your appearance"),
+                        trailing: Obx(
+                          () => SegmentedButton<ThemeMode>(
+                            segments: const [
+                              ButtonSegment(
+                                  value: ThemeMode.light,
+                                  // label: Text("Light"),
+                                  icon: Icon(AppIcons.add)),
+                              ButtonSegment(
+                                  value: ThemeMode.dark,
+                                  // label: Text("Dark"),
+                                  icon: Icon(AppIcons.add)),
+                            ],
+                            selected: {
+                              controller.isDarkMode.value
+                                  ? ThemeMode.dark
+                                  : ThemeMode.light
+                            },
+                            onSelectionChanged: (value) {
+                              controller.setThemeMode(value.first);
+                            },
+                          ),
+                        ),
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(AppIcons.openFolder),
+                        title: const Text("Open settings folder"),
+                        subtitle: const Text("Logs and local configuration"),
+                        onTap: () async {
+                          final path = await getLogFilePath();
+                          if (path != null) {
+                            UrlLaunchOptions.openInFileExplorer(
+                                path.parent.path);
+                            return;
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(AppIcons.delete),
+                        title: const Text("Clear logs"),
+                        subtitle: const Text("Remove all log entries"),
+                        onTap: () => controller.clearLogs(),
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(AppIcons.delete),
+                        title: const Text("Clear database"),
+                        subtitle: const Text("Reset the local database"),
+                        onTap: () => controller.clearDataBase(),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: const Icon(AppIcons.github),
+                        title: const Text("GitHub"),
+                        subtitle: const Text("Open project repository"),
+                        onTap: () {
+                          UrlLaunchOptions.launchInBrowser(
+                              "https://github.com/hx-ux/File-Nest");
+                        },
+                      ),
+                      const Divider(height: 1),
+                      ListTile(
+                        leading: const Icon(AppIcons.info),
+                        title: const Text("Version"),
+                        subtitle: Text(
+                            "${AppSettings.appVersion} ${AppSettings.currPlatform}"),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          if (hasInfoIcon)
-            Icon(
-              infoIconState
-                  ? FluentIcons.select_object_skew_20_filled
-                  : FluentIcons.send_16_filled,
-              color: infoIconState ? Colors.green : Colors.red,
-            )
         ],
       ),
-    );
+    ));
   }
 }

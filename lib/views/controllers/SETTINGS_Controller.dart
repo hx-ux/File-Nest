@@ -31,18 +31,21 @@ class SettingsController extends GetxController {
     ).logToFile();
   }
 
-  void toggleColorMode() {
+  Future<void> toggleColorMode() async {
     isDarkMode.value = !isDarkMode.value;
     var themeController = Get.put(ThemeController());
-    themeController.currentTheme.value = isDarkMode.value;
-    print("set color Theme to  $isDarkMode");
+    await themeController.setThemeMode(
+      isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+    );
     AppLogger(
-      message: "set color Theme to  $isDarkMode",
+      message: "set color Theme to ${isDarkMode.value}",
       logLevel: LogLevel.info,
     ).logToFile(showSnackbar: false);
+  }
 
-    saveSettings({
-      "themeMode": isDarkMode.value ? 1 : 0,
-    });
+  Future<void> setThemeMode(ThemeMode mode) async {
+    isDarkMode.value = mode == ThemeMode.dark;
+    var themeController = Get.put(ThemeController());
+    await themeController.setThemeMode(mode);
   }
 }
