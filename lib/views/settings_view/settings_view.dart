@@ -1,17 +1,15 @@
 import 'package:file_nest/config.dart';
 import 'package:file_nest/core/utilities/UrlLauncher.dart';
-import 'package:file_nest/model/Logger.dart';
-import 'package:file_nest/model/log_level.dart';
 import 'package:file_nest/views/controllers/SETTINGS_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SettingsPage extends GetView<SETTINGS_Controller> {
+class SettingsPage extends GetView<SettingsController> {
   SettingsPage({super.key});
   @override
-  final controller = Get.put(SETTINGS_Controller());
+  final controller = Get.put(SettingsController());
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +39,8 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
             FluentIcons.settings_16_filled, context, "Open settings folder",
             () async {
           final path = await getLogFilePath();
-          if (path != null) {
-            UrlLaunchOptions.openInFileExplorer(path.parent.path);
-            return;
-          }
+          UrlLaunchOptions.openInFileExplorer(path.parent.path);
+          return;
         }),
         Obx(
           () => settingsEntry(

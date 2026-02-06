@@ -2,8 +2,8 @@ import 'package:path/path.dart' as path;
 
 // Enum to represent file types
 enum FileType {
-  File,
-  Folder,
+  file,
+  folder,
 }
 
 class SourceArtefakt {

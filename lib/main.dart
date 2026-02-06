@@ -1,5 +1,4 @@
 import 'package:file_nest/config.dart';
-import 'package:file_nest/core/theme/app_theme.dart';
 import 'package:file_nest/model/db.dart';
 import 'package:file_nest/routes/app_pages.dart';
 import 'package:file_nest/views/bindings/binding.dart';
@@ -43,7 +42,7 @@ Future<void> main() async {
           initialBinding: HomeBindings(),
           theme: themeController.getTheme,
           darkTheme: darkTheme,
-          initialRoute: Routes.HOME,
+          initialRoute: Routes.home,
           getPages: AppPages.pages,
           home: Home_Page(), // app screens
         );

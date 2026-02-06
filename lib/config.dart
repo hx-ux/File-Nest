@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:file_nest/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
@@ -28,14 +26,14 @@ class AppSettings {
 // this is the folder where the logfile and the dbare stored
 Future<Directory> getSettingFolderPath() async {
   final dir = await getApplicationDocumentsDirectory();
-  final Directory _appDocDirFolder =
+  final Directory appDocDirFolder =
       Directory('${dir.path}/${AppSettings.settingsFolderName}');
-  if (await _appDocDirFolder.exists()) {
-    return _appDocDirFolder;
+  if (await appDocDirFolder.exists()) {
+    return appDocDirFolder;
   } else {
-    final Directory _appDocDirNewFolder =
-        await _appDocDirFolder.create(recursive: true);
-    return _appDocDirNewFolder;
+    final Directory appDocDirNewFolder =
+        await appDocDirFolder.create(recursive: true);
+    return appDocDirNewFolder;
   }
 }
 

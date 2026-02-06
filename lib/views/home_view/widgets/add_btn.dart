@@ -8,16 +8,15 @@ class AddBtn extends StatelessWidget {
     required this.controller,
   });
 
-  final HOME_Controller controller;
+  final HomeController controller;
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-        onPressed: () async {
-          controller.addArtefact();
-          
-        },
-        child: const Icon(FluentIcons.add_24_regular),
-      );
+      onPressed: () async {
+        controller.addArtefact();
+      },
+      child: const Icon(FluentIcons.add_24_regular),
+    );
   }
 }

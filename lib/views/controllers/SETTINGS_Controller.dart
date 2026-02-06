@@ -2,12 +2,9 @@ import 'package:file_nest/config.dart';
 import 'package:file_nest/model/Logger.dart';
 import 'package:file_nest/model/log_level.dart';
 import 'package:file_nest/views/controllers/theme_controller.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
-class SETTINGS_Controller extends GetxController {
+class SettingsController extends GetxController {
   RxBool alwaysMove = false.obs;
   RxBool isDarkMode = false.obs;
 
@@ -48,6 +45,4 @@ class SETTINGS_Controller extends GetxController {
       "themeMode": isDarkMode.value ? 1 : 0,
     });
   }
-
-  void showAboutPage(BuildContext context) => showAboutPage(context);
 }

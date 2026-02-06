@@ -1,4 +1,3 @@
-import 'package:file_nest/core/theme/colors.style.dart';
 import 'package:file_nest/views/controllers/LOG_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
 import 'package:file_nest/views/logs_view/widget/log_card.dart';
@@ -6,9 +5,9 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LogsPage extends GetView<LOG_Controller> {
+class LogsPage extends GetView<LogController> {
   @override
-  final controller = Get.put(LOG_Controller());
+  final controller = Get.put(LogController());
 
   get onChanged => null;
 

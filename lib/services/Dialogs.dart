@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_dialogs/dialogs.dart';
 
-simpleConfirmDialog(LogLevel logLevel, String message, String? fileName, {int showDuration=2000}) {
- 
-   Timer(Duration(milliseconds: showDuration), () {
+simpleConfirmDialog(LogLevel logLevel, String message, String? fileName,
+    {int showDuration = 2000}) {
+  Timer(Duration(milliseconds: showDuration), () {
     Navigator.pop(Get.context!);
   });
-  _DialogSimpleConfirm(logLevel, message, fileName);
+  dialogSimpleConfirm(logLevel, message, fileName);
 }
 
-_DialogSimpleConfirm(LogLevel logLevel, String message, String? fileName) {
+dialogSimpleConfirm(LogLevel logLevel, String message, String? fileName) {
   Dialogs.bottomMaterialDialog(
       msg: message,
       title: logLevel.description,
@@ -29,4 +29,3 @@ _DialogSimpleConfirm(LogLevel logLevel, String message, String? fileName) {
         ),
       ]);
 }
-

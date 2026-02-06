@@ -1,24 +1,13 @@
 import 'dart:io';
 
+import 'package:open_folder/open_folder.dart';
+
 class UrlLaunchOptions {
   static void openInFileExplorer(String path) async {
-    if (Platform.isWindows) {
-      Process.run(
-        "explorer",
-        [path],
-        workingDirectory: path,
-      );
-    } else if (Platform.isLinux) {
-      Process.run(
-        "xdg-open",
-        [path],
-      );
-    } else if (Platform.isMacOS) {
-      Process.run(
-        "open",
-        [path],
-      );
-    }
+    try {
+      // TODO Log errors
+      final _ = await OpenFolder.openFolder(path);
+    } catch (e) {}
   }
 
   static launchInBrowser(String url) async {
