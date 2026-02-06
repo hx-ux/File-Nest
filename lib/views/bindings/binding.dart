@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 class HomeBindings extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<HOME_Controller>(
-      () => HOME_Controller(),
+    Get.lazyPut<HomeController>(
+      () => HomeController(),
     );
   }
 }
@@ -15,8 +15,8 @@ class HomeBindings extends Bindings {
 class ControllBindings extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<LOG_Controller>(
-      () => LOG_Controller(),
+    Get.lazyPut<LogController>(
+      () => LogController(),
     );
   }
 }
@@ -24,8 +24,8 @@ class ControllBindings extends Bindings {
 class SettingsBindings extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SETTINGS_Controller>(
-      () => SETTINGS_Controller(),
+    Get.lazyPut<SettingsController>(
+      () => SettingsController(),
     );
   }
 }

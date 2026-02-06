@@ -8,11 +8,11 @@ part './app_routes.dart';
 abstract class AppPages {
   static final pages = [
     GetPage(
-      name: Routes.HOME,
+      name: Routes.home,
       page: () => Home_Page(),
     ),
-    GetPage(name: Routes.SETTINGS, page: () => SettingsPage()),
-    GetPage(name: Routes.LOG, page: () => LogsPage()),
-    GetPage(name: Routes.FileOperation, page: () => FileTransferView()),
+    GetPage(name: Routes.settings, page: () => SettingsPage()),
+    GetPage(name: Routes.log, page: () => LogsPage()),
+    GetPage(name: Routes.fileOperation, page: () => FileTransferView()),
   ];
 }

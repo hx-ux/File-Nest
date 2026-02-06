@@ -1,13 +1,11 @@
 part of './app_pages.dart';
 
-// todo not used yet 
+// todo not used yet
 abstract class Routes {
-  static const INITIAL = '/';
-  static const HOME = '/home';
-  static const SETTINGS = '/settings';
-  static const LOG = '/log';
-  static const ALERT = '/alert';
-  static const FileOperation = '/fileoperation';
-
-
+  static const initial = '/';
+  static const home = '/home';
+  static const settings = '/settings';
+  static const log = '/log';
+  static const alert = '/alert';
+  static const fileOperation = '/fileoperation';
 }

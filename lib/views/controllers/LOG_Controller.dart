@@ -1,13 +1,10 @@
 import 'package:file_nest/model/Logger.dart';
-import 'package:file_nest/model/log_level.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
-class LOG_Controller extends GetxController {
+class LogController extends GetxController {
   var logList = <AppLogger>[].obs;
 
   RxBool sortbyDateDesc = true.obs;
-
 
   @override
   void onInit() {

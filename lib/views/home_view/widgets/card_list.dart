@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_nest/core/theme/colors.style.dart';
 import 'package:file_nest/core/theme/fonts.style.dart';
@@ -9,11 +7,9 @@ import 'package:file_nest/views/controllers/HOME_Controller.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class ArtefactListEntry extends StatefulWidget {
-  final HOME_Controller controller;
+  final HomeController controller;
   final TargetArtefact artefact;
   final DropTragetIdentifier;
   ArtefactListEntry({
@@ -29,12 +25,12 @@ class ArtefactListEntry extends StatefulWidget {
 }
 
 class _ArtefactListEntryState extends State<ArtefactListEntry> {
-  late final HOME_Controller controller;
+  late final HomeController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.find<HOME_Controller>();
+    controller = Get.find<HomeController>();
   }
 
   @override
@@ -42,7 +38,7 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
     return DropTarget(
       onDragDone: (detail) {
         controller.selectedNode = TargetArtefact("", "");
-        controller.isOverNode = false.obs;
+        controller.isOverNode.value = false;
 
         List<String> files = [];
         detail.files.forEach((file) => files.add(file.path));
@@ -57,11 +53,11 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
         controller.selectedNode = TargetArtefact("", "");
         controller.isOverNode.value = false;
       },
-      child: EntryCard(context, controller),
+      child: entryCard(context, controller),
     );
   }
 
-  Obx EntryCard(BuildContext context, HOME_Controller controller) {
+  Obx entryCard(BuildContext context, HomeController controller) {
     return Obx(() => Container(
           height: MediaQuery.of(context).size.height * 0.1,
           width: MediaQuery.of(context).size.width * 0.6,
@@ -90,7 +86,7 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
                   ],
                 )
               : Row(
-                  mainAxisAlignment: MainAxisAlignment.start, // add space
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     IconButton(
                       onPressed: () {
@@ -128,6 +124,7 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
                           fontFamily: IFont.primaryFontBold,
                           fontSize: 15,
                         ),
+                        softWrap: true,
                       ),
                     ),
                   ],

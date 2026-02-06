@@ -2,7 +2,7 @@ import 'package:file_nest/views/controllers/HOME_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class FileTransferView extends GetView<HOME_Controller> {
+class FileTransferView extends GetView<HomeController> {
   @override
   // final controller = Get.put(HOME_Controller());
   const FileTransferView({Key? key}) : super(key: key);

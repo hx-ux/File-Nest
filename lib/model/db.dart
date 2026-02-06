@@ -1,7 +1,6 @@
 import 'package:file_nest/config.dart';
 import 'package:file_nest/model/TargetArtefact.dart';
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 
 class DBApdater {
   static final DBApdater _instance = DBApdater._internal();

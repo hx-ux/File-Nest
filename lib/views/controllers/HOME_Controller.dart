@@ -15,14 +15,21 @@ import 'package:path/path.dart' as p;
 import 'package:uuid/uuid.dart';
 
 enum CopyOrMove {
-  Copy,
-  Move,
+  copy(0),
+  move(1);
+
+  final int id;
+  const CopyOrMove(this.id);
+
+  factory CopyOrMove.fromId(int id) {
+    return values.firstWhere((e) => e.id == id);
+  }
 }
 
-class HOME_Controller extends GetxController {
+class HomeController extends GetxController {
   RxList<TargetArtefact> allArtefacts = <TargetArtefact>[].obs;
 
-  var copyOrMove = CopyOrMove.Copy.obs;
+  RxInt copyOrMove = 0.obs;
   TargetArtefact? selectedNode;
   RxBool isOverNode = false.obs;
   RxInt dropTragetIdentifier = 0.obs;
@@ -31,7 +38,7 @@ class HOME_Controller extends GetxController {
   RxString currentProcressedFile = "".obs;
   RxBool currentFileProcessFinished = false.obs;
 
-  CancelableOperation? _copyOperation;
+  CancelableOperation? copyOperation;
   RxBool copyOperationFinished = false.obs;
 
   StreamController<bool> streamController = StreamController<bool>();
@@ -101,7 +108,7 @@ class HOME_Controller extends GetxController {
   void fileTransferOperation(List<String> inputFiles, String targetPath) async {
     copyOperationFinished.value = false;
     try {
-      if (copyOrMove.value == CopyOrMove.Copy) {
+      if (copyOrMove.value == 0) {
         if (inputFiles.isEmpty) throw "No files selected";
 
         List<File> toCopyFiles = inputFiles
@@ -111,14 +118,14 @@ class HOME_Controller extends GetxController {
 
         if (toCopyFiles.isEmpty) throw "No files to copy";
 
-        Get.toNamed(Routes.FileOperation);
-        _copyOperation = CancelableOperation.fromFuture(
+        Get.toNamed(Routes.fileOperation);
+        copyOperation = CancelableOperation.fromFuture(
           copyFiles(toCopyFiles, targetPath),
           onCancel: () => {},
         ).then((_) async {
           copyOperationFinished.value = true;
           await Future.delayed(Duration(seconds: 1));
-          Get.toNamed(Routes.HOME);
+          Get.toNamed(Routes.home);
         });
       }
     } catch (e) {
