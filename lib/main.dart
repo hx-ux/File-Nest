@@ -45,7 +45,7 @@ Future<void> main() async {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: themeController.currentMode,
-            initialRoute: Routes.HOME,
+            initialRoute: Routes.home,
             getPages: AppPages.pages,
             home: Home_Page(), // app screens
           ),

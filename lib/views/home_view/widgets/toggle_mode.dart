@@ -27,7 +27,7 @@ class _ToggleBtnState extends State<ToggleBtn> {
       width: 30,
       borderRadius: 10,
       selectedIndex: widget.controller.copyOrMove.value,
-      selectedBackgroundColors: const [IColors.attentionColor],
+      selectedBackgroundColors: const [IColors.primary],
       isShadowEnable: false,
       unSelectedBackgroundColors: [IColors.backgroundDark],
       dataTabs: iconList,

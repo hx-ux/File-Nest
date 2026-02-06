@@ -6,9 +6,9 @@ import 'package:file_nest/views/logs_view/widget/log_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LogsPage extends GetView<LOG_Controller> {
+class LogsPage extends GetView<LogController> {
   @override
-  final controller = Get.put(LOG_Controller());
+  final controller = Get.put(LogController());
 
   @override
   Widget build(BuildContext context) {

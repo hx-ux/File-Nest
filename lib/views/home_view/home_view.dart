@@ -1,6 +1,6 @@
 import 'package:file_nest/core/widgets/responsive_page.dart';
 import 'package:file_nest/views/controllers/HOME_Controller.dart';
-import 'package:file_nest/views/home_view/widgets/addBtn.dart';
+import 'package:file_nest/views/home_view/widgets/add_btn.dart';
 import 'package:file_nest/views/home_view/widgets/card_list.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
 
@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // ignore: use_key_in_widget_constructors
-class Home_Page extends GetView<HOME_Controller> {
+class Home_Page extends GetView<HomeController> {
   @override
-  final controller = Get.put(HOME_Controller());
+  final controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {

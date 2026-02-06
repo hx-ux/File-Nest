@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ArtefactListEntry extends StatefulWidget {
-  final HOME_Controller controller;
+  final HomeController controller;
   final TargetArtefact artefact;
   final DropTragetIdentifier;
   ArtefactListEntry({
@@ -23,12 +23,12 @@ class ArtefactListEntry extends StatefulWidget {
 }
 
 class _ArtefactListEntryState extends State<ArtefactListEntry> {
-  late final HOME_Controller controller;
+  late final HomeController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.find<HOME_Controller>();
+    controller = Get.find<HomeController>();
   }
 
   @override
@@ -55,7 +55,7 @@ class _ArtefactListEntryState extends State<ArtefactListEntry> {
     );
   }
 
-  Obx EntryCard(BuildContext context, HOME_Controller controller) {
+  Obx EntryCard(BuildContext context, HomeController controller) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     return Obx(() => Container(

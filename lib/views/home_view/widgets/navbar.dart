@@ -1,20 +1,17 @@
 import 'package:file_nest/core/theme/icons.style.dart';
 import 'package:file_nest/views/controllers/HOME_Controller.dart';
-import 'package:file_nest/views/home_view/widgets/ToggleButton.dart';
+import 'package:file_nest/views/home_view/widgets/toggle_mode.dart';
 import 'package:file_nest/views/logs_view/logs_view.dart';
 import 'package:file_nest/views/settings_view/settings_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_nest/core/theme/icons.style.dart';
 
-class Navbar extends GetView<HOME_Controller> {
+class Navbar extends GetView<HomeController> {
   final bool subpage;
   const Navbar({Key? key, required this.subpage}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textStyle = Theme.of(context).textTheme.labelLarge;
-
     return Container(
       color: Color(0),
       child: Row(

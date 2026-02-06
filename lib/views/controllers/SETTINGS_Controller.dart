@@ -2,7 +2,9 @@ import 'package:file_nest/config.dart';
 import 'package:file_nest/model/Logger.dart';
 import 'package:file_nest/model/log_level.dart';
 import 'package:file_nest/views/controllers/theme_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:file_nest/core/theme/app_theme.dart';
 
 class SettingsController extends GetxController {
   RxBool alwaysMove = false.obs;

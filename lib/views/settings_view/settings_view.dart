@@ -1,16 +1,39 @@
 import 'package:file_nest/config.dart';
+import 'package:file_nest/core/theme/colors.style.dart';
 import 'package:file_nest/core/theme/icons.style.dart';
 import 'package:file_nest/core/widgets/responsive_page.dart';
 import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/views/controllers/SETTINGS_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:get/get.dart';
 
-class SettingsPage extends GetView<SETTINGS_Controller> {
+// FlutterToggleTab(
+//       width: 30,
+//       borderRadius: 10,
+//       selectedIndex: widget.controller.copyOrMove.value,
+//       selectedBackgroundColors: const [IColors.primary],
+//       isShadowEnable: false,
+//       unSelectedBackgroundColors: [IColors.backgroundDark],
+//       dataTabs: iconList,
+//       selectedLabelIndex: (index) => widget.controller.copyOrMove.value = index,
+//       isScroll: false,
+//     );
+
+List<DataTab> get iconList => [
+      DataTab(
+        icon: AppIcons.darkMode,
+      ),
+      DataTab(
+        icon: AppIcons.lightMode,
+      ),
+    ];
+
+class SettingsPage extends GetView<SettingsController> {
   SettingsPage({super.key});
   @override
-  final controller = Get.put(SETTINGS_Controller());
+  final controller = Get.put(SettingsController());
 
   @override
   Widget build(BuildContext context) {
@@ -36,27 +59,17 @@ class SettingsPage extends GetView<SETTINGS_Controller> {
                         leading: const Icon(AppIcons.theme),
                         title: const Text("Theme"),
                         subtitle: const Text("Select your appearance"),
-                        trailing: Obx(
-                          () => SegmentedButton<ThemeMode>(
-                            segments: const [
-                              ButtonSegment(
-                                  value: ThemeMode.light,
-                                  // label: Text("Light"),
-                                  icon: Icon(AppIcons.add)),
-                              ButtonSegment(
-                                  value: ThemeMode.dark,
-                                  // label: Text("Dark"),
-                                  icon: Icon(AppIcons.add)),
-                            ],
-                            selected: {
-                              controller.isDarkMode.value
-                                  ? ThemeMode.dark
-                                  : ThemeMode.light
-                            },
-                            onSelectionChanged: (value) {
-                              controller.setThemeMode(value.first);
-                            },
-                          ),
+                        trailing: FlutterToggleTab(
+                          width: 15,
+                          // borderRadius: 5,
+                          selectedIndex: 0,
+                          height: 25,
+                          selectedBackgroundColors: const [IColors.primary],
+                          isShadowEnable: false,
+                          unSelectedBackgroundColors: [IColors.backgroundDark],
+                          dataTabs: iconList,
+                          selectedLabelIndex: (index) => 0,
+                          isScroll: false,
                         ),
                       ),
                       const Divider(height: 1),
