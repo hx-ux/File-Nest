@@ -6,7 +6,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.2 <4.0.0'
+  sdk: '>=3.3.8 <4.0.0'
 
 dependencies:
   flutter:
@@ -34,6 +34,7 @@ dependencies:
   cancelable: ^4.2.1
   async: ^2.12.0
   settings_yaml: ^8.2.0
+  open_folder: ^0.0.3
 
 dev_dependencies:
   flutter_test:
