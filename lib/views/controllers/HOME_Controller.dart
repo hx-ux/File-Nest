@@ -108,26 +108,26 @@ class HomeController extends GetxController {
   void fileTransferOperation(List<String> inputFiles, String targetPath) async {
     copyOperationFinished.value = false;
     try {
-      if (copyOrMove.value == 0) {
-        if (inputFiles.isEmpty) throw "No files selected";
+      // if (copyOrMove.value == 0) {
+      if (inputFiles.isEmpty) throw "No files selected";
 
-        List<File> toCopyFiles = inputFiles
-            .map((filePath) => File(filePath))
-            .where((file) => !doesFileExits(file, targetPath))
-            .toList();
+      List<File> toCopyFiles = inputFiles
+          .map((filePath) => File(filePath))
+          .where((file) => !doesFileExits(file, targetPath))
+          .toList();
 
-        if (toCopyFiles.isEmpty) throw "No files to copy";
+      if (toCopyFiles.isEmpty) throw "No files to copy";
 
-        Get.toNamed(Routes.fileOperation);
-        copyOperation = CancelableOperation.fromFuture(
-          copyFiles(toCopyFiles, targetPath),
-          onCancel: () => {},
-        ).then((_) async {
-          copyOperationFinished.value = true;
-          await Future.delayed(Duration(seconds: 1));
-          Get.toNamed(Routes.home);
-        });
-      }
+      Get.toNamed(Routes.fileOperation);
+      copyOperation = CancelableOperation.fromFuture(
+        copyFiles(toCopyFiles, targetPath),
+        onCancel: () => {},
+      ).then((_) async {
+        copyOperationFinished.value = true;
+        await Future.delayed(Duration(seconds: 1));
+        Get.toNamed(Routes.home);
+      });
+      // }
     } catch (e) {
       AppLogger(
         logLevel: LogLevel.error,

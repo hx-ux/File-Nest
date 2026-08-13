@@ -29,16 +29,15 @@ class AppLogger {
 
   AppLogger({
     this.logLevel = LogLevel.copy,
-    this.message = "none",
-    this.fileName = "none",
-    this.destination = "none",
+    this.message,
+    this.fileName,
+    this.destination,
   });
 
   void logToFile({bool showSnackbar = true}) {
     _writeLog(logLevel, message, fileName, destination);
     if (showSnackbar) {
-      showSnackbarInformation(
-          message??"unknow", fileName ?? "unknowm",
+      showSnackbarInformation(message ?? "unknow", fileName ?? "unknowm",
           infoType: logLevel);
     }
   }
@@ -72,11 +71,12 @@ class AppLogger {
         AppLogger appLogger = AppLogger();
         appLogger.logLevel = LogLevel.values.byName(parts[0]);
         int unixTimeStamp = int.tryParse(parts[1]) ?? 0;
-        appLogger.timestamp = DateTime.fromMillisecondsSinceEpoch(unixTimeStamp);
+        appLogger.timestamp =
+            DateTime.fromMillisecondsSinceEpoch(unixTimeStamp);
         appLogger.message = parts[2];
         appLogger.fileName = parts[3];
         appLogger.destination = parts[4];
-        appLogger.icon = LogLevel.values.byName(parts[0]).icon ;
+        appLogger.icon = LogLevel.values.byName(parts[0]).icon;
         appLogger.color = LogLevel.values.byName(parts[0]).attentioncolor;
         return appLogger;
       } catch (e) {

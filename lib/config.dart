@@ -7,15 +7,12 @@ import 'package:path/path.dart' as p;
 import 'package:settings_yaml/settings_yaml.dart';
 
 class AppSettings {
-  //
   static const String appName = "File Nest";
   static const String appVersion = "0.0.1_alpha";
   static const bool isStable = false;
-  //
   static const Size minSize = Size(400, 400);
-  static const Size startSize = Size(400, 800);
+  static const Size startSize = Size(600, 800);
   static const Size maxSize = Size(800, 800);
-//
   static const logFileName = "file_nest_log.txt";
   static const settingsFolderName = "fileNest";
   static const appSettingsFileName = "app_settings.yaml";
@@ -23,7 +20,6 @@ class AppSettings {
 }
 
 // Settings folder
-// this is the folder where the logfile and the dbare stored
 Future<Directory> getSettingFolderPath() async {
   final dir = await getApplicationDocumentsDirectory();
   final Directory appDocDirFolder =
@@ -55,6 +51,7 @@ Future<File> getAppSettingsFilePath() async {
 
 Future<void> saveSettings(Map<String, int> values) async {
   final file = await getAppSettingsFilePath();
+
   final settings = SettingsYaml.load(pathToSettings: file.path);
   for (var element in values.entries) {
     settings[element.key] = element.value;

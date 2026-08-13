@@ -9,13 +9,18 @@ class FileTransferView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: Obx(
         () => SizedBox(
           height: MediaQuery.of(context).size.height,
           child: CustomPaint(
             painter:
-                ProgressBarPainter(progress: controller.transferProgress.value),
+                ProgressBarPainter(
+              progress: controller.transferProgress.value,
+              color: colorScheme.primary,
+              completeColor: colorScheme.secondary,
+            ),
             child: Center(
               child: Column(
                 children: [
@@ -24,13 +29,16 @@ class FileTransferView extends GetView<HomeController> {
                   ),
                   Text(
                     "${((controller.transferProgress.value * 100).roundToDouble()).clamp(0, 100).toInt()}%",
-                    style: const TextStyle(color: Colors.white, fontSize: 15),
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
+                      fontSize: 15,
+                    ),
                   ),
                   Text(
                     controller.currentProcressedFile.value.split('/').last,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: colorScheme.onSurface,
                       fontSize: 16,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -48,13 +56,19 @@ class FileTransferView extends GetView<HomeController> {
 
 class ProgressBarPainter extends CustomPainter {
   final double progress;
+  final Color color;
+  final Color completeColor;
 
-  ProgressBarPainter({required this.progress});
+  ProgressBarPainter({
+    required this.progress,
+    required this.color,
+    required this.completeColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = progress >= 1.0 ? Colors.green : Colors.blue
+      ..color = progress >= 1.0 ? completeColor : color
       ..style = PaintingStyle.fill;
 
     final rectHeight = size.height * progress.clamp(0.0, 1.0);

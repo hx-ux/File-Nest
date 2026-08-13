@@ -7,14 +7,22 @@ final lightTheme = appThemeDataBright;
 final darkTheme = appThemeDataDark;
 
 class ThemeController extends GetxController {
-  Rx<bool> currentTheme = true.obs;
 
-  ThemeData get getTheme => currentTheme.value ? darkTheme : lightTheme;
+  Rx<ThemeMode> themeMode = ThemeMode.dark.obs;
   
+  ThemeMode get currentMode => themeMode.value;
+
   @override
   Future<void> onInit() async {
     super.onInit();
     var themeFile = await loadSettings();
-    currentTheme.value = themeFile["themeMode"] == 1 ? true : false;
+    themeMode.value =
+        themeFile["themeMode"] == 1 ? ThemeMode.dark : ThemeMode.light;
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    themeMode.value = mode;
+    Get.changeThemeMode(mode);
+    await saveSettings({"themeMode": mode == ThemeMode.dark ? 1 : 0});
   }
 }

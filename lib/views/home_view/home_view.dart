@@ -1,7 +1,9 @@
+import 'package:file_nest/core/widgets/responsive_page.dart';
 import 'package:file_nest/views/controllers/HOME_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/add_btn.dart';
 import 'package:file_nest/views/home_view/widgets/card_list.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,45 +15,42 @@ class Home_Page extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-      children: <Widget>[
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Navbar(
+        body: ResponsivePage(
+      child: Column(
+        children: <Widget>[
+          const Navbar(
             subpage: false,
           ),
-        ),
-        Expanded(
-          child: ListView(
-            shrinkWrap: true,
-            physics: ClampingScrollPhysics(),
-            children: [
-              Obx(() => ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: controller.allArtefacts.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ArtefactListEntry(
-                          artefact: controller.allArtefacts[index],
-                          controller: controller,
-                          DropTragetIdentifier: index,
-                        ),
-                      );
-                    },
-                  ))
-            ],
+          const SizedBox(height: 12),
+          Expanded(
+            child: Obx(
+              () => controller.allArtefacts.isEmpty
+                  ? Center(
+                      child: Text(
+                        "Add folders to get started",
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    )
+                  : ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: controller.allArtefacts.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ArtefactListEntry(
+                            artefact: controller.allArtefacts[index],
+                            controller: controller,
+                            DropTragetIdentifier: index,
+                          ),
+                        );
+                      },
+                    ),
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AddBtn(controller: controller),
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.01,
-          width: MediaQuery.of(context).size.width,
-        )
-      ],
+          const SizedBox(height: 12),
+          AddBtn(controller: controller),
+        ],
+      ),
     ));
   }
 }
