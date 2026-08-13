@@ -35,6 +35,7 @@ dependencies:
   async: ^2.12.0
   settings_yaml: ^8.2.0
   open_folder: ^0.0.3
+  toggle_switch: ^2.3.0
 
 dev_dependencies:
   flutter_test:

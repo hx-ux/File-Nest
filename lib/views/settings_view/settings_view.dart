@@ -6,29 +6,8 @@ import 'package:file_nest/core/utilities/UrlLauncher.dart';
 import 'package:file_nest/views/controllers/SETTINGS_Controller.dart';
 import 'package:file_nest/views/home_view/widgets/navbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:get/get.dart';
-
-// FlutterToggleTab(
-//       width: 30,
-//       borderRadius: 10,
-//       selectedIndex: widget.controller.copyOrMove.value,
-//       selectedBackgroundColors: const [IColors.primary],
-//       isShadowEnable: false,
-//       unSelectedBackgroundColors: [IColors.backgroundDark],
-//       dataTabs: iconList,
-//       selectedLabelIndex: (index) => widget.controller.copyOrMove.value = index,
-//       isScroll: false,
-//     );
-
-List<DataTab> get iconList => [
-      DataTab(
-        icon: AppIcons.darkMode,
-      ),
-      DataTab(
-        icon: AppIcons.lightMode,
-      ),
-    ];
+import 'package:toggle_switch/toggle_switch.dart';
 
 class SettingsPage extends GetView<SettingsController> {
   SettingsPage({super.key});
@@ -56,20 +35,27 @@ class SettingsPage extends GetView<SettingsController> {
                   child: Column(
                     children: [
                       ListTile(
-                        leading: const Icon(AppIcons.theme),
+                        leading: const Icon(AppIcons.darkMode),
                         title: const Text("Theme"),
-                        subtitle: const Text("Select your appearance"),
-                        trailing: FlutterToggleTab(
-                          width: 15,
-                          // borderRadius: 5,
-                          selectedIndex: 0,
-                          height: 25,
-                          selectedBackgroundColors: const [IColors.primary],
-                          isShadowEnable: false,
-                          unSelectedBackgroundColors: [IColors.backgroundDark],
-                          dataTabs: iconList,
-                          selectedLabelIndex: (index) => 0,
-                          isScroll: false,
+                        trailing: ToggleSwitch(
+                          minWidth: 50.0,
+                          minHeight: 30.0,
+                          initialLabelIndex: controller.getThemeMode().index,
+                          activeBgColor: [Colors.green],
+                          activeFgColor: Colors.white,
+                          inactiveBgColor: IColors.backgroundDark,
+                          inactiveFgColor: IColors.backgroundLight,
+                          totalSwitches: 3,
+                          icons: [
+                            AppIcons.followSystsem,
+                            AppIcons.lightMode,
+                            AppIcons.darkMode
+                          ],
+                          onToggle: (index) {
+                            var t = ThemeMode.values[index ?? 0];
+                            controller.setThemeMode(t);
+                            print('switched to: $t');
+                          },
                         ),
                       ),
                       const Divider(height: 1),
@@ -79,11 +65,8 @@ class SettingsPage extends GetView<SettingsController> {
                         subtitle: const Text("Logs and local configuration"),
                         onTap: () async {
                           final path = await getLogFilePath();
-                          if (path != null) {
-                            UrlLaunchOptions.openInFileExplorer(
-                                path.parent.path);
-                            return;
-                          }
+                          UrlLaunchOptions.openInFileExplorer(path.parent.path);
+                          return;
                         },
                       ),
                     ],
@@ -116,7 +99,6 @@ class SettingsPage extends GetView<SettingsController> {
                       ListTile(
                         leading: const Icon(AppIcons.github),
                         title: const Text("GitHub"),
-                        subtitle: const Text("Open project repository"),
                         onTap: () {
                           UrlLaunchOptions.launchInBrowser(
                               "https://github.com/hx-ux/File-Nest");

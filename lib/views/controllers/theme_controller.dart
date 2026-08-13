@@ -7,7 +7,9 @@ final lightTheme = appThemeDataBright;
 final darkTheme = appThemeDataDark;
 
 class ThemeController extends GetxController {
+
   Rx<ThemeMode> themeMode = ThemeMode.dark.obs;
+  
   ThemeMode get currentMode => themeMode.value;
 
   @override

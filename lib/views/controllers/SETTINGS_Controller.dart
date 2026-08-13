@@ -4,12 +4,10 @@ import 'package:file_nest/model/log_level.dart';
 import 'package:file_nest/views/controllers/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:file_nest/core/theme/app_theme.dart';
 
 class SettingsController extends GetxController {
-  RxBool alwaysMove = false.obs;
   RxBool isDarkMode = false.obs;
-
+  var themeController = Get.put(ThemeController());
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -33,21 +31,9 @@ class SettingsController extends GetxController {
     ).logToFile();
   }
 
-  Future<void> toggleColorMode() async {
-    isDarkMode.value = !isDarkMode.value;
-    var themeController = Get.put(ThemeController());
-    await themeController.setThemeMode(
-      isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
-    );
-    AppLogger(
-      message: "set color Theme to ${isDarkMode.value}",
-      logLevel: LogLevel.info,
-    ).logToFile(showSnackbar: false);
-  }
+  ThemeMode getThemeMode() => themeController.currentMode;
 
   Future<void> setThemeMode(ThemeMode mode) async {
-    isDarkMode.value = mode == ThemeMode.dark;
-    var themeController = Get.put(ThemeController());
     await themeController.setThemeMode(mode);
   }
 }
